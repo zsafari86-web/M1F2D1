@@ -1,0 +1,2252 @@
+<!DOCTYPE html>
+<!--
+  کاوشگر مثلثات: نسبت‌های مثلثاتی، پایه‌ی دهم
+  توسعه و طراحی: زینب صفری
+  فایل تک‌صفحه‌ای و بدون نیاز به اینترنت. برای اجرا فقط آن را در مرورگر باز کنید.
+-->
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#4338ca">
+<title>کاوشگر مثلثات</title>
+<style>
+/* ── فونت: اگر فایل‌های Vazirmatn کنار این فایل باشند استفاده می‌شوند ── */
+@font-face {
+  font-family:Vazirmatn;
+  font-weight:400;
+  src:local("Vazirmatn"),local("Vazirmatn Regular"),url("Vazirmatn-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family:Vazirmatn;
+  font-weight:700;
+  src:local("Vazirmatn Bold"),url("Vazirmatn-Bold.woff2") format("woff2");
+}
+.reset {
+  display:block;
+  margin:14px auto 4px;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  color:#94a3b8;
+  font-size:.8rem;
+  font-weight:400;
+  text-decoration:underline;
+}
+
+/* ── پایه: متغیرها، بدنه، کارت‌ها، دکمه‌ها، جدول و کسر ── */
+:root {
+  --p:#4338ca;
+  --ok:#059669;
+  --t:#1e293b;
+}
+* {
+  box-sizing:border-box;
+}
+body {
+  margin:0;
+  font-family:Vazirmatn,Tahoma,sans-serif;
+  font-size:16px;
+  line-height:1.9;
+  color:var(--t);
+  background:linear-gradient(160deg,#eef2ff,#fdf2f8);
+  min-height:100vh;
+}
+.wrap {
+  max-width:560px;
+  margin:0 auto;
+  padding:12px;
+}
+header {
+  text-align:center;
+}
+h1 {
+  font-size:1.15rem;
+  margin:4px 0;
+  color:var(--p);
+}
+small {
+  color:#64748b;
+}
+#prog {
+  display:flex;
+  gap:6px;
+  justify-content:center;
+  margin:8px 0;
+}
+#prog b {
+  flex:1;
+  max-width:90px;
+  height:8px;
+  border-radius:5px;
+  background:#cbd5e1;
+}
+#prog b.on {
+  background:var(--p);
+}
+#prog b.done {
+  background:var(--ok);
+}
+.card {
+  background:#fff;
+  border-radius:18px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 6px 18px #0001;
+}
+svg {
+  width:100%;
+  height:auto;
+  display:block;
+  touch-action:manipulation;
+}
+button {
+  font:inherit;
+  font-weight:500;
+  border:0;
+  border-radius:12px;
+  padding:8px 14px;
+  margin:4px;
+  background:#e0e7ff;
+  color:var(--p);
+  cursor:pointer;
+}
+button.pri {
+  background:var(--p);
+  color:#fff;
+}
+button:disabled {
+  opacity:.4;
+}
+.msg {
+  padding:10px 12px;
+  border-radius:12px;
+  margin:8px 0;
+}
+.good {
+  background:#d1fae5;
+  color:#065f46;
+}
+.bad {
+  background:#fee2e2;
+  color:#991b1b;
+}
+.info {
+  background:#e0f2fe;
+  color:#075985;
+}
+input[type=range] {
+  width:100%;
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+  text-align:center;
+}
+td,th {
+  border-bottom:1px solid #e2e8f0;
+  padding:4px;
+}
+.fr {
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  vertical-align:middle;
+  margin:0 4px;
+  direction:ltr;
+  line-height:1.5;
+}
+.fr i {
+  font-style:normal;
+  padding:0 5px;
+}
+.fr i:first-child {
+  border-bottom:2px solid currentColor;
+}
+.o {
+  color:#c2410c;
+  font-weight:600;
+}
+.bl {
+  color:#0369a1;
+  font-weight:600;
+}
+.h {
+  color:#6d28d9;
+  font-weight:600;
+}
+.nm {
+  background:#f1f5f9;
+  border-radius:12px;
+  padding:6px 12px;
+  margin:8px 0;
+  text-align:center;
+}
+.nm b {
+  color:var(--p);
+}
+.fm {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  direction:ltr;
+  font-size:1.1rem;
+  font-weight:600;
+  margin:4px 0;
+}
+.mt {
+  display:inline-block;
+  direction:ltr;
+  unicode-bidi:isolate;
+  white-space:nowrap;
+  vertical-align:middle;
+}
+.rd {
+  display:inline-flex;
+  align-items:flex-start;
+  direction:ltr;
+}
+.rb {
+  border-top:2px solid currentColor;
+  padding:0 2px;
+  margin-right:1px;
+  line-height:1.25;
+}
+.tile {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  text-align:right;
+  background:#f8fafc;
+  border:2px solid #e2e8f0;
+  border-radius:14px;
+  padding:10px 12px;
+  margin:8px 0;
+  color:var(--t);
+}
+.tile i {
+  font-style:normal;
+  font-size:1.3rem;
+  min-width:28px;
+  text-align:center;
+  color:var(--p);
+  font-weight:700;
+}
+.tile>span {
+  display:block;
+}
+.tile b {
+  display:block;
+  color:var(--p);
+}
+.tile small {
+  color:#64748b;
+  display:block;
+}
+.tile.dn {
+  border-color:#6ee7b7;
+  background:#ecfdf5;
+}
+footer {
+  text-align:center;
+  color:#64748b;
+  font-size:.8rem;
+  padding:6px;
+}
+@keyframes bm {
+  to {
+    stroke-dashoffset:0;
+  }
+}
+
+/* ── ظاهر اصلی: سربرگ، کارت‌ها، دکمه‌ها، منو، پیام‌ها و شکل ── */
+body {
+  font-family:Vazirmatn,Vazir,"Noto Sans Arabic","Noto Naskh Arabic",Tahoma,sans-serif;
+  background:#f4f6ff radial-gradient(circle at 85% -10%,#e9d5ff 0,transparent 45%),radial-gradient(circle at 0 30%,#dbeafe 0,transparent 40%);
+  background-attachment:fixed;
+}
+header {
+  margin:-12px -12px 10px;
+}
+.hero {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  background:linear-gradient(135deg,#4338ca,#7c3aed 55%,#db2777);
+  color:#fff;
+  border-radius:0 0 28px 28px;
+  padding:18px 20px 16px;
+  box-shadow:0 10px 24px #4338ca33;
+  text-align:right;
+}
+.hero h1 {
+  color:#fff;
+  font-size:1.55rem;
+  margin:0;
+}
+.hero p {
+  margin:2px 0 6px;
+  opacity:.92;
+}
+.hero small {
+  color:#e0e7ff;
+}
+.hv {
+  width:88px;
+  flex:none;
+}
+#prog {
+  display:block;
+  padding:10px 14px 0;
+  text-align:right;
+}
+#prog button {
+  padding:5px 14px;
+  font-size:.85rem;
+  margin:0;
+  border-radius:999px;
+  box-shadow:none;
+  background:#fff;
+}
+.card {
+  border-radius:22px;
+  border:1px solid #e0e7ff;
+  box-shadow:0 8px 22px #4338ca14;
+}
+#figc {
+  background-color:#fff;
+  background-image:linear-gradient(#eef2ff 1px,transparent 1px),linear-gradient(90deg,#eef2ff 1px,transparent 1px);
+  background-size:22px 22px;
+}
+#panel>* {
+  animation:fade .35s both;
+}
+@keyframes fade {
+  from {
+    opacity:0;
+    transform:translateY(6px);
+  }
+}
+@keyframes pop {
+  from {
+    transform:scale(.94);
+    opacity:0;
+  }
+}
+button {
+  font-weight:600;
+  border:2px solid #c7d2fe;
+  border-radius:14px;
+  padding:9px 16px;
+  margin:5px 4px;
+  background:#fff;
+  color:#4338ca;
+  box-shadow:0 3px 0 #c7d2fe;
+  transition:transform .12s,box-shadow .12s;
+}
+button:active {
+  transform:translateY(3px);
+  box-shadow:none;
+}
+button.pri {
+  background:linear-gradient(135deg,#4f46e5,#7c3aed);
+  color:#fff;
+  border-color:#4338ca;
+  box-shadow:0 3px 0 #3730a3;
+}
+button:disabled {
+  opacity:.45;
+}
+.msg {
+  border:1px solid;
+  animation:pop .3s;
+}
+.good {
+  background:#ecfdf5;
+  border-color:#a7f3d0;
+  color:#065f46;
+}
+.bad {
+  background:#fef2f2;
+  border-color:#fecaca;
+  color:#991b1b;
+}
+.info {
+  background:#eff6ff;
+  border-color:#bfdbfe;
+  color:#1e40af;
+}
+table {
+  border-radius:12px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 0 0 1px #e0e7ff;
+}
+th {
+  background:#eef2ff;
+  color:#4338ca;
+}
+tr:nth-child(even) td {
+  background:#fafbff;
+}
+.nm {
+  background:linear-gradient(135deg,#eef2ff,#fdf2f8);
+  border:1px solid #e0e7ff;
+}
+.tile {
+  border:2px solid #e2e8f0;
+  background:#fff;
+  box-shadow:0 4px 12px #4338ca12;
+  margin:10px 0;
+  transition:transform .15s;
+}
+.tile:active {
+  transform:scale(.98);
+  box-shadow:none;
+}
+.tile.dn {
+  border-color:#6ee7b7;
+}
+.tile {
+  font-weight:400;
+}
+.tile b {
+  font-weight:700;
+}
+.ic {
+  width:50px;
+  height:50px;
+  border-radius:15px;
+  display:grid;
+  place-items:center;
+  flex:none;
+  box-shadow:0 4px 10px #0002;
+}
+.ic svg {
+  width:30px;
+  height:30px;
+}
+.ck {
+  margin-inline-start:auto;
+  background:#10b981;
+  color:#fff;
+  border-radius:50%;
+  width:26px;
+  height:26px;
+  display:grid;
+  place-items:center;
+  font-style:normal;
+  font-weight:700;
+}
+.hl {
+  paint-order:stroke;
+  stroke:#fff;
+  stroke-width:3.5px;
+  stroke-linejoin:round;
+}
+.cf {
+  position:fixed;
+  top:-16px;
+  width:9px;
+  height:14px;
+  border-radius:2px;
+  pointer-events:none;
+  z-index:99;
+  animation:fall 1.5s ease-in forwards;
+}
+@keyframes fall {
+  to {
+    transform:translateY(108vh) rotate(560deg);
+  }
+}
+
+/* ── گزینه‌های آزمون ── */
+.opt {
+  display:block;
+  width:100%;
+  margin:8px 0;
+  font-size:1.1rem;
+}
+
+/* ── فلش‌کارت برگردان ── */
+.fc3d {
+  perspective:900px;
+  margin:12px 0;
+  cursor:pointer;
+}
+.fc3i {
+  position:relative;
+  height:170px;
+  transition:transform .6s;
+  transform-style:preserve-3d;
+}
+.fc3d.fl .fc3i {
+  transform:rotateY(180deg);
+}
+.fc3f,.fc3b {
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  font-size:1.8rem;
+  font-weight:700;
+  border-radius:20px;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  border:2px solid #c7d2fe;
+  box-shadow:0 6px 16px #4338ca1a;
+}
+.fc3f {
+  background:linear-gradient(135deg,#eef2ff,#fdf2f8);
+  color:#4338ca;
+}
+.fc3b {
+  background:linear-gradient(135deg,#ecfdf5,#dbeafe);
+  border-color:#6ee7b7;
+  color:#065f46;
+  transform:rotateY(180deg);
+}
+
+/* ── نمودار پیشرفت، پیام تکمیل و نوار آزمون ── */
+.pc {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  background:linear-gradient(135deg,#eef2ff,#fdf2f8);
+  border:1px solid #e0e7ff;
+  border-radius:20px;
+  padding:12px 16px;
+  margin:6px 0 10px;
+}
+.pc b {
+  color:#4338ca;
+  font-size:1.1rem;
+}
+.dots {
+  display:flex;
+  gap:4px;
+  margin-top:8px;
+  flex-wrap:wrap;
+}
+.dots i {
+  width:11px;
+  height:11px;
+  border-radius:50%;
+  background:#cbd5e1;
+}
+.dots i.on {
+  background:linear-gradient(135deg,#10b981,#0ea5e9);
+  box-shadow:0 0 0 3px #10b98130;
+}
+.dots i.nx {
+  background:#fbbf24;
+  animation:pl 1.2s infinite;
+}
+@keyframes pl {
+  50% {
+    transform:scale(1.35);
+  }
+}
+.win {
+  position:fixed;
+  inset:0;
+  background:#1e1b4bcc;
+  display:grid;
+  place-items:center;
+  z-index:100;
+  animation:fade .3s;
+}
+.wc {
+  background:#fff;
+  border-radius:24px;
+  padding:20px 24px;
+  max-width:320px;
+  text-align:center;
+  box-shadow:0 20px 50px #0006;
+  animation:pop .45s;
+}
+.wc h3 {
+  margin:6px 0 2px;
+  color:#4338ca;
+  font-size:1.25rem;
+}
+.wc p {
+  margin:4px 0 8px;
+}
+.qbar {
+  display:flex;
+  gap:4px;
+  margin:6px 0;
+}
+.qbar i {
+  flex:1;
+  height:7px;
+  border-radius:4px;
+  background:#e0e7ff;
+}
+.qbar i.ok {
+  background:#10b981;
+}
+.qbar i.no {
+  background:#f43f5e;
+}
+.qbar i.cur {
+  background:#6366f1;
+}
+.tmr {
+  height:10px;
+  border-radius:6px;
+  background:#e0e7ff;
+  overflow:hidden;
+  margin:6px 0;
+}
+.tmr i {
+  display:block;
+  height:100%;
+  width:100%;
+  background:linear-gradient(90deg,#10b981,#f59e0b);
+  border-radius:6px;
+}
+.tmr.lo i {
+  background:#f43f5e;
+}
+.star {
+  font-size:2.2rem;
+  color:#f59e0b;
+  letter-spacing:6px;
+  text-align:center;
+}
+.pts {
+  display:flex;
+  justify-content:space-between;
+  font-weight:700;
+  color:#4338ca;
+}
+
+/* ── منوی آموزش: مسیر یادگیری ── */
+.cont {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 4px 0 8px;
+  padding: 7px 14px;
+  border: 2px solid #c7d2fe;
+  border-radius: 999px;
+  color: #4338ca;
+  background: #fff;
+  box-shadow: none;
+  font-weight: 400;
+  font-size: .9rem;
+  text-align: right;
+}
+.cont span { display: flex; align-items: baseline; gap: 6px; }
+.cont b { font-size: 1rem; }
+.cont small { color: #64748b; opacity: 1; }
+.cont i { font-style: normal; font-size: .95rem; }
+
+/* ── منوی آموزش: گروه‌های کشویی (هر گروه رنگ خودش را دارد) ── */
+.grp { margin: 12px 0; --c1: #0ea5e9; --c2: #6366f1; --bg: #eff6ff; --bd: #bae6fd; }
+.grp.g1 { --c1: #f59e0b; --c2: #f97316; --bg: #fffbeb; --bd: #fde68a; }
+.grp.g2 { --c1: #8b5cf6; --c2: #db2777; --bg: #faf5ff; --bd: #e9d5ff; }
+.gh {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding: 12px 14px;
+  text-align: right;
+  color: #fff;
+  font-weight: 400;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 5px 12px #0000002e;
+}
+.gh span { flex: 1; display: block; }
+.gh b { display: block; font-size: 1.15rem; }
+.gh small { display: block; color: #fff; opacity: .92; }
+.gh em { font-style: normal; font-weight: 700; font-size: .85rem; white-space: nowrap; color: var(--c2); background: #fff; border-radius: 999px; padding: 2px 10px; }
+.gh i { font-style: normal; font-size: 1.2rem; color: #fff; transition: transform .3s; }
+.gh.on i { transform: rotate(180deg); }
+.gb { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s ease; }
+.gb.open { grid-template-rows: 1fr; }
+.gb > div { overflow: hidden; min-height: 0; }
+.in { margin: 10px 16px 2px 0; padding-right: 12px; border-right: 3px solid var(--bd); }
+.step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 8px 0;
+  padding: 8px 12px;
+  text-align: right;
+  background: #fff;
+  border: 2px solid var(--bd);
+  border-radius: 14px;
+  box-shadow: 0 2px 6px #0000000f;
+  color: var(--t);
+  font-weight: 400;
+}
+.step span { display: block; }
+.step b { display: block; color: #1e293b; }
+.step small { display: block; color: #64748b; }
+.step em { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--bg); border: 2px solid var(--c1); color: var(--c2); font-style: normal; font-weight: 700; }
+.step.dn { background: var(--bg); }
+.step.dn em { background: linear-gradient(135deg, var(--c1), var(--c2)); border-color: transparent; color: #fff; }
+.step.nx { border-color: var(--c1); box-shadow: 0 0 0 3px var(--bd); }
+.step.nx em { animation: pl 1.4s infinite; }
+
+/* ── نمایش روی تبلت، لپ‌تاپ و پروژکتور ── */
+#main { display: grid; gap: 16px; align-items: start; }
+#main.solo { max-width: 760px; margin: 0 auto; }
+.fs { margin: 6px 0 0; padding: 4px 12px; font-size: .8rem; border-radius: 999px; background: #ffffff26; border: 1px solid #ffffff66; color: #fff; box-shadow: none; }
+@media (min-width: 600px) {
+  body { font-size: 18px; }
+  .wrap { max-width: 720px; }
+}
+@media (min-width: 900px) {
+  body { font-size: 20px; }
+  .wrap { max-width: 1240px; padding: 14px 24px; }
+  header { margin: -14px -24px 12px; }
+  .hero { padding: 14px 28px; }
+  .hero h1 { font-size: 1.9rem; }
+  .hv { width: 100px; }
+  #main { grid-template-columns: 1.15fr 1fr; }
+  #main.solo { grid-template-columns: 1fr; }
+  #figc { position: sticky; top: 12px; }
+  .card { padding: 18px; }
+  .wc { max-width: 480px; }
+}
+@media (min-width: 1400px) {
+  body { font-size: 24px; }
+  .wrap { max-width: 1600px; }
+  #main.solo { max-width: 900px; }
+}
+</style>
+</head>
+<body><div class="wrap">
+<header><div class="hero"><div><h1>کاوشگر مثلثات</h1><p>کشف کن، پیش‌بینی کن، اثبات کن</p><small>توسعه و طراحی: زینب صفری · نسخه‌ی نهایی</small><br><button class="fs" onclick="toggleFS()">تمام‌صفحه ⛶</button></div><svg class="hv" viewBox="0 0 96 76"><path d="M10 66H84L10 14Z" fill="#fff" fill-opacity=".16"/><path d="M10 66H84" stroke="#7dd3fc" stroke-width="5" stroke-linecap="round"/><path d="M10 66V14" stroke="#fdba74" stroke-width="5" stroke-linecap="round"/><path d="M10 14L84 66" stroke="#c4b5fd" stroke-width="5" stroke-linecap="round"/><path d="M10 54h12v12" stroke="#fff" stroke-width="2.5" fill="none"/><path d="M64 66a22 22 0 0 0-9-14" stroke="#fde68a" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg></div><div id="prog"></div></header>
+<div id="main">
+<div class="card" id="figc"><svg id="fig" viewBox="0 0 300 250"></svg></div>
+<div class="card" id="panel"></div>
+</div>
+<footer>توسعه و طراحی: زینب صفری</footer></div>
+<script>
+/*
+ * فهرست بخش‌های کد
+ *  1) هسته            2) حروف‌چینی ریاضی   3) رسم شکل          4) ناوبری و رندر
+ *  5) A شناخت اضلاع   6) B ثابت بودن نسبت‌ها  7) D تمرین نام‌گذاری  8) E زوایای ویژه
+ *  9) F روابط         10) G حل مسئله        11) H ارتفاع          12) T تمرین طناب
+ * 13) محاسبه‌ی مساحت  14) آزمون             15) فلش‌کارت          16) منو و پیشرفت
+ *
+ * داده‌های قابل ویرایش:  QZ (سوال‌های آزمون)  PB (مسئله‌ها)  EX (تمرین طناب)
+ *                        AP (تمرین مساحت)      FV (فلش‌کارت)  WM (پیام‌های تکمیل)  SEC (منوی آموزش)
+ * پیشرفت دانش‌آموز در localStorage با کلید trigDN ذخیره می‌شود.
+ */
+// ════════════════════════════════════════════════════════════
+// 1) هسته: ابزارها، رنگ‌ها و وضعیت برنامه
+// ════════════════════════════════════════════════════════════
+
+const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]).replace('.', '٫');
+
+const $ = i => document.getElementById(i);
+
+const C = { opp: '#f97316', adj: '#0ea5e9', hyp: '#7c3aed' }, TC = { opp: '#c2410c', adj: '#0369a1', hyp: '#6d28d9' }, N = { opp: 'مقابل', adj: 'مجاور', hyp: 'وتر' }, CL = { opp: 'o', adj: 'bl', hyp: 'h' };
+
+const S = {};
+
+let lv = 0, spok = false, vis = {}, sel = [], q1 = false, done = false, st = 0, ph = 0, streak = 0, ask = 'opp', rows = [], pr = 0, ok0 = true;
+
+const role = (s, t = S.tg) => s == 'AB' ? 'hyp' : ((s == 'AC') == (t == 'B') ? 'opp' : 'adj');
+
+const msg = (c, t) => `<div class="msg ${c}">${t}</div>`;
+
+const put = h => {
+    $('panel').innerHTML = h;
+    const m = $('main');
+    if (m) m.classList.toggle('solo', $('figc').style.display == 'none');
+};
+
+const note = (c, t) => {
+    if ($('note'))
+        $('note').innerHTML = msg(c, t);
+};
+
+let selN = [], pf = null, DN = {};
+
+try {
+    DN = JSON.parse(localStorage.getItem('trigDN') || '{}');
+}
+catch (e) {
+}
+
+const fin = k => {
+    if (!DN[k]) {
+        DN[k] = 1;
+        try {
+            burst();
+        }
+        catch (e) {
+        }
+        try {
+            showWin(k);
+        }
+        catch (e) {
+        }
+        try {
+            localStorage.setItem('trigDN', JSON.stringify(DN));
+        }
+        catch (e) {
+        }
+    }
+};
+
+// ════════════════════════════════════════════════════════════
+// 2) حروف‌چینی ریاضی: کسر، رادیکال و فرمول
+// ════════════════════════════════════════════════════════════
+
+const DEF = { sin: ['opp', 'hyp'], cos: ['adj', 'hyp'], tan: ['opp', 'adj'], cot: ['adj', 'opp'] }, V = { opp: 3, adj: 4, hyp: 5 };
+
+const frs = (n, d) => `<span class=fr><i class=${CL[n]}>${N[n]}</i><i class=${CL[d]}>${N[d]}</i></span>`;
+
+const nf = (a, b) => `<span class=fr><i>${fa(a)}</i><i>${fa(b)}</i></span>`;
+
+const dec = x => {
+    const r = Math.round(x * 100) / 100;
+    return (Math.abs(x - r) < 1e-9 ? '' : '≈') + fa(r);
+};
+
+const lf = (a, b) => `<span class=fr><i>${a}</i><i>${b}</i></span>`;
+
+const NM = (t, f, x) => `<div class=nm><b>${t}</b><div class=fm><span>${f} =</span>${x}</div></div>`;
+
+const svgM = x => x.replace(/√(\S+)/g, '√<tspan text-decoration="overline">$1</tspan>');
+
+const rd = x => `<span class=rd>√<span class=rb>${fa(x)}</span></span>`, mt = h => `<span class=mt>${h}</span>`, R2 = rd(2), R3 = rd(3);
+
+const half = lf('۱', '۲'), h2 = lf(R2, '۲'), s3 = lf(R3, '۲'), t3 = lf(R3, '۳');
+
+const fxi = x => fa(x).replace(/√([۰-۹]+)/g, (m, d) => rd(d));
+
+const fx = x => mt(x.split(/((?:\d*√)?\d+\/(?:\d*√)?\d+)/).map((t, i) => {
+    if (i % 2) {
+        const [a, b] = t.split('/');
+        return lf(fxi(a), fxi(b));
+    }
+    return fxi(t);
+}).join(''));
+
+const tx = t => t.split(/\{([^}]*)\}/).map((q, i) => i % 2 ? fx(q) : fa(q)).join('');
+
+// ════════════════════════════════════════════════════════════
+// 3) رسم شکل: مثلث، زاویه و صحنه‌های مسئله
+// ════════════════════════════════════════════════════════════
+
+function tf() {
+    const r = S.th * Math.PI / 180, c = Math.cos(r), s = Math.sin(r), u = S.k * 12, w = S.bw, h = S.bh;
+    return ([x, y]) => {
+        x = (x - w / 3) * S.fl;
+        y = y + h / 3;
+        return [150 + (S.ox || 0) + u * (x * c - y * s), 125 + (S.oy || 0) + u * (x * s + y * c)];
+    };
+}
+
+function pts() {
+    const f = tf(), w = S.bw, h = S.bh;
+    return { A: f([0, -h]), B: f([w, 0]), C: f([0, 0]) };
+}
+
+function ctxPoly() {
+    if (!S.ctx)
+        return '';
+    const f = tf(), w = S.bw, hh = S.bh, P = S.ctx == 'sq' ? [[0, 0], [w, 0], [w, -hh], [0, -hh]] : [[-w, 0], [w, 0], [0, -hh]];
+    return `<polygon points="${P.map(q => f(q).join(',')).join(' ')}" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5 4"/>`;
+}
+
+function draw() {
+    if (st == 9 || st == 14) {
+        drawH();
+        return;
+    }
+    if (st == 12 || st == 13) {
+        drawS();
+        return;
+    }
+    const p = pts(), sd = { AB: [p.A, p.B], AC: [p.A, p.C], BC: [p.B, p.C] }, m = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], cen = [(p.A[0] + p.B[0] + p.C[0]) / 3, (p.A[1] + p.B[1] + p.C[1]) / 3], out = (q, d) => {
+        const dx = q[0] - cen[0], dy = q[1] - cen[1], l = Math.hypot(dx, dy) || 1;
+        return [q[0] + dx / l * d, q[1] + dy / l * d];
+    }, e = (a, b, l) => {
+        const dx = b[0] - a[0], dy = b[1] - a[1], d = Math.hypot(dx, dy);
+        return [dx / d * l, dy / d * l];
+    };
+    const V = p[S.tg], o = S.tg == 'B' ? p.A : p.B;
+    if (S.noTri && S.scene) {
+        $('fig').innerHTML = DEFS + sceneArt(S.scene, p);
+        return;
+    }
+    let h = DEFS + (S.scene ? sceneArt(S.scene, p) : '') + ctxPoly() + (S.scene ? '' : `<polygon points="${[p.A, p.B, p.C].map(q => q.join(',')).join(' ')}" fill="url(#tg)" filter="url(#sh)"/>`) + `<circle cx="${V[0]}" cy="${V[1]}" r="12" fill="#fef3c7"/>`;
+    for (const n in sd) {
+        const [a, b] = sd[n], r = role(n), big = S.mark == n || S.hi == n, col = S.show || S.nest || S.mark == n ? C[r] : S.hi == n ? '#dc2626' : '#64748b';
+        h += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${col}" stroke-width="${big ? 7 : 5}" stroke-linecap="round" stroke-opacity="${S.nest ? .4 : 1}"${S.scene ? ' stroke-dasharray="7 6"' : ''}/>`;
+        let t = '';
+        if (S.show && !S.lab)
+            t += N[r];
+        if (S.lab)
+            t += svgM(fa(S.lab[n]));
+        else if (S.nums)
+            t += ' ' + fa({ AC: 3, BC: 4, AB: 5 }[n] * (S.nest ? 3 : S.k));
+        if (t && S.lab && String(S.lab[n]).includes('√')) {
+            const q = out(m(a, b), 20);
+            h += `<foreignObject x="${q[0] - 36}" y="${q[1] - 14}" width="72" height="28"><div xmlns="http://www.w3.org/1999/xhtml" style="display:flex;justify-content:center;align-items:center;height:28px;font:700 15px sans-serif;color:${TC[r]};text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;direction:ltr">${fxi(String(S.lab[n]))}</div></foreignObject>`;
+        }
+        else if (t) {
+            const q = out(m(a, b), 20);
+            h += `<text class=hl x="${q[0]}" y="${q[1]}" fill="${S.show || S.nest ? TC[r] : '#334155'}" font-size="14" font-weight="700" text-anchor="middle" dominant-baseline="middle">${t}</text>`;
+        }
+    }
+    if (S.nest) {
+        const f = S.nest, L = (a, b) => [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f], D = L(p.B, p.C), E = L(p.B, p.A);
+        h += `<polygon points="${[p.B, D, E].map(q => q.join(',')).join(' ')}" fill="#c7d2fe88"/>`;
+        for (const [a, b, r] of [[p.B, D, 'adj'], [D, E, 'opp'], [p.B, E, 'hyp']])
+            h += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${S.nhi && r == 'opp' ? '#dc2626' : C[r]}" stroke-width="5" stroke-linecap="round"/>`;
+        const g = e(D, p.B, 9), w = e(D, E, 9);
+        h += `<path d="M${D[0] + g[0]} ${D[1] + g[1]}l${w[0]} ${w[1]}l${-g[0]} ${-g[1]}" fill="none" stroke="#334155" stroke-width="1.6"/>`;
+        for (const [n, q] of [['D', D], ['E', E]]) {
+            const z = out(q, 15);
+            h += `<text class=hl x="${z[0]}" y="${z[1]}" font-size="16" font-weight="700" fill="#1e293b" text-anchor="middle" dominant-baseline="middle">${n}</text>`;
+        }
+    }
+    if (S.beam) {
+        const [a, b] = sd[S.tg == 'B' ? 'AC' : 'BC'], M = m(a, b), L = Math.hypot(M[0] - V[0], M[1] - V[1]);
+        h += `<line x1="${V[0]}" y1="${V[1]}" x2="${M[0]}" y2="${M[1]}" stroke="#f59e0b" stroke-width="3" stroke-dasharray="${L}" stroke-dashoffset="${S.anim ? L : 0}" style="${S.anim ? 'animation:bm .7s forwards' : ''}"/><circle cx="${M[0]}" cy="${M[1]}" r="5" fill="#f59e0b"/>`;
+        S.anim = 0;
+    }
+    const a1 = e(V, p.C, 26), a2 = e(V, o, 26), cr = a1[0] * a2[1] - a1[1] * a2[0];
+    h += `<path d="M${V[0]} ${V[1]}L${V[0] + a1[0]} ${V[1] + a1[1]}A26 26 0 0 ${cr > 0 ? 1 : 0} ${V[0] + a2[0]} ${V[1] + a2[1]}Z" fill="#fde68acc" stroke="#d97706" stroke-width="2.5" stroke-linejoin="round"/>`;
+    if (S.angL) {
+        const mx = a1[0] + a2[0], my = a1[1] + a2[1], ml = Math.hypot(mx, my) || 1;
+        h += `<text class=hl x="${V[0] + mx / ml * 46}" y="${V[1] + my / ml * 46}" font-size="14" font-weight="700" fill="#b45309" text-anchor="middle" dominant-baseline="middle">${S.angL}</text>`;
+    }
+    const u1 = e(p.C, p.B, 11), v1 = e(p.C, p.A, 11);
+    h += `<path d="M${p.C[0] + u1[0]} ${p.C[1] + u1[1]}l${v1[0]} ${v1[1]}l${-u1[0]} ${-u1[1]}" fill="#e0e7ff" stroke="#334155" stroke-width="1.8"/>`;
+    for (const n in p) {
+        const q = out(p[n], 16);
+        h += `<circle cx="${p[n][0]}" cy="${p[n][1]}" r="4.5" fill="#fff" stroke="#334155" stroke-width="2"/>`;
+        h += `<text class=hl x="${q[0]}" y="${q[1]}" font-size="17" font-weight="700" fill="#1e293b" text-anchor="middle" dominant-baseline="middle">${n}</text>`;
+    }
+    if (S.pick)
+        for (const n in sd) {
+            const [a, b] = sd[n];
+            h += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="transparent" stroke-width="28" onclick="pick('${n}')"/>`;
+        }
+    $('fig').innerHTML = h;
+}
+
+const DEFS = '<defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e0e7ff"/><stop offset="1" stop-color="#fce7f3"/></linearGradient><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#f0f9ff"/></linearGradient><linearGradient id="gs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#86efac"/><stop offset="1" stop-color="#4ade80"/></linearGradient><linearGradient id="gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e0f2fe"/><stop offset="1" stop-color="#38bdf8"/></linearGradient><clipPath id="rc"><rect width="300" height="250" rx="14"/></clipPath><filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#4338ca" flood-opacity=".22"/></filter></defs>';
+
+const ladderS = (A, B) => {
+    const dx = B[0] - A[0], dy = B[1] - A[1], L = Math.hypot(dx, dy), nx = -dy / L * 4.5, ny = dx / L * 4.5;
+    let r = `<path d="M${A[0] + nx} ${A[1] + ny}L${B[0] + nx} ${B[1] + ny}M${A[0] - nx} ${A[1] - ny}L${B[0] - nx} ${B[1] - ny}" stroke="#92400e" stroke-width="3.5" stroke-linecap="round"/>`;
+    for (let t = .1; t < .97; t += .1) {
+        const x = A[0] + dx * t, y = A[1] + dy * t;
+        r += `<path d="M${x - nx} ${y - ny}L${x + nx} ${y + ny}" stroke="#78350f" stroke-width="2.5"/>`;
+    }
+    return r;
+};
+
+const sunS = (x, y) => `<circle cx="${x}" cy="${y}" r="24" fill="#fde047" opacity=".3"/><circle cx="${x}" cy="${y}" r="14" fill="#fde047"/><g stroke="#facc15" stroke-width="3" stroke-linecap="round">${[0, 45, 90, 135, 180, 225, 270, 315].map(a => {
+    const c = Math.cos(a * Math.PI / 180), d = Math.sin(a * Math.PI / 180);
+    return `<path d="M${x + c * 19} ${y + d * 19}L${x + c * 26} ${y + d * 26}"/>`;
+}).join('')}</g>`;
+
+const boxS = (x, y, w, h, f, sd, tp) => `<polygon points="${x},${y} ${x - 13},${y - 8} ${x - 13},${y + h - 8} ${x},${y + h}" fill="${sd}"/><polygon points="${x},${y} ${x + w},${y} ${x + w - 13},${y - 8} ${x - 13},${y - 8}" fill="${tp}"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}"/>`;
+
+const cloudS = (x, y, k) => `<g fill="#fff" opacity=".9"><ellipse cx="${x}" cy="${y}" rx="${16 * k}" ry="${7 * k}"/><ellipse cx="${x + 10 * k}" cy="${y - 5 * k}" rx="${11 * k}" ry="${7 * k}"/><ellipse cx="${x - 9 * k}" cy="${y - 3 * k}" rx="${9 * k}" ry="${6 * k}"/></g>`;
+
+const winS = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="url(#gl)" stroke="#0369a1" stroke-width="1.8"/><path d="M${x + w / 2} ${y}V${y + h}M${x} ${y + h / 2}H${x + w}" stroke="#0369a1" stroke-width="1.2"/>`;
+
+function raysS(A, B, g) {
+    const dx = B[0] - A[0], dy = B[1] - A[1], L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
+    let r = '';
+    [0, 26, 52].forEach(o => {
+        const px = A[0] + uy * o, py = A[1] - ux * o, t0 = -py / uy, t1 = (g - py) / uy;
+        r += `<path d="M${px + ux * t0} 0L${px + ux * t1} ${g}" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="2 8" stroke-linecap="round" opacity="${o ? .5 : 1}"/>`;
+    });
+    return r;
+}
+
+function sceneArt(sc, p) {
+    const [A, B, C] = [p.A, p.B, p.C], g = C[1], W = Math.min(80, C[0] - 24), x0 = C[0] - W;
+    let h = `<g clip-path="url(#rc)"><rect width="300" height="250" fill="url(#sky)"/>${cloudS(210, 52, 1)}${cloudS(110, 36, .8)}<path d="M0 ${g - 26}C60 ${g - 60} 120 ${g - 16} 190 ${g - 42}S280 ${g - 30} 300 ${g - 40}V${g}H0Z" fill="#a7f3d0"/><rect x="0" y="${g}" width="300" height="${250 - g}" fill="url(#gs)"/><path d="M0 ${g}H300" stroke="#22c55e" stroke-width="3"/>`;
+    const dx = B[0] - A[0], dy = B[1] - A[1], L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, sX = Math.max(26, Math.min(130, A[0] - A[1] / uy * ux));
+    if (sc == 'ladder') {
+        const top = A[1] - 22;
+        h += `<ellipse cx="${C[0] - W / 2}" cy="${g + 5}" rx="${W / 2 + 14}" ry="6" fill="#166534" opacity=".25"/>` + boxS(x0, top, W, g - top, '#fde68a', '#d9a441', '#fff0b3') + `<polygon points="${x0 - 6},${top} ${x0 + W / 2},${top - 30} ${x0 + W / 2 - 13},${top - 38} ${x0 - 19},${top - 8}" fill="#b91c1c"/><polygon points="${x0 - 6},${top} ${C[0] + 6},${top} ${x0 + W / 2},${top - 30}" fill="#ef4444" stroke="#b91c1c" stroke-width="2" stroke-linejoin="round"/><rect x="${x0 + W - 22}" y="${top - 34}" width="9" height="18" fill="#7f1d1d"/>` + winS(x0 + 10, top + 10, 22, 22) + `<rect x="${x0 + W - 32}" y="${g - 38}" width="22" height="38" rx="3" fill="#92400e"/><circle cx="${x0 + W - 14}" cy="${g - 19}" r="2" fill="#fde047"/>` + sunS(266, 30) + `<ellipse cx="${B[0]}" cy="${g + 3}" rx="14" ry="4" fill="#166534" opacity=".3"/>` + ladderS(A, B);
+    }
+    if (sc == 'bld') {
+        h += sunS(sX, 26) + raysS(A, B, g) + `<rect x="${C[0]}" y="${g - 3}" width="${B[0] - C[0]}" height="9" rx="4" fill="#334155" opacity=".28"/>` + boxS(x0, A[1], W, g - A[1], '#cbd5e1', '#94a3b8', '#e2e8f0');
+        for (let y = A[1] + 10; y < g - 36; y += 24)
+            for (let x = x0 + 8; x < C[0] - 20; x += 26)
+                h += winS(x, y, 16, 14);
+        h += `<rect x="${C[0] - 30}" y="${g - 28}" width="20" height="28" rx="2" fill="#92400e"/>`;
+    }
+    if (sc == 'tree') {
+        h += sunS(sX, 26) + raysS(A, B, g) + `<rect x="${C[0]}" y="${g - 3}" width="${B[0] - C[0]}" height="9" rx="4" fill="#334155" opacity=".28"/><ellipse cx="${C[0]}" cy="${g + 4}" rx="30" ry="7" fill="#166534" opacity=".3"/><path d="M${C[0]} ${g}L${A[0]} ${A[1]}" stroke="#78350f" stroke-width="13" stroke-linecap="round"/><path d="M${C[0] - 3} ${g}L${A[0] - 3} ${A[1]}" stroke="#a16207" stroke-width="5" stroke-linecap="round"/><circle cx="${A[0]}" cy="${A[1] - 12}" r="32" fill="#15803d"/><circle cx="${A[0] - 14}" cy="${A[1] - 2}" r="22" fill="#22c55e"/><circle cx="${A[0] + 16}" cy="${A[1] - 4}" r="20" fill="#4ade80"/><circle cx="${A[0] - 6}" cy="${A[1] - 24}" r="12" fill="#86efac" opacity=".7"/>`;
+    }
+    if (sc == 'ramp') {
+        const top = A[1] - 42;
+        h += sunS(266, 30) + boxS(x0, top, W, g - top, '#e5e7eb', '#cbd5e1', '#f3f4f6') + `<rect x="${C[0] - 28}" y="${top + 4}" width="26" height="${A[1] - top - 4}" rx="3" fill="#7c3aed"/><circle cx="${C[0] - 8}" cy="${top + 22}" r="2" fill="#fde047"/><polygon points="${A[0]},${A[1]} ${B[0]},${B[1]} ${B[0] - 13},${B[1] - 8} ${A[0] - 13},${A[1] - 8}" fill="#6b7280"/><polygon points="${A} ${B} ${C}" fill="#9ca3af" stroke="#6b7280" stroke-width="2"/>`;
+        for (const t of [0, .5, 1]) {
+            const x = A[0] + (B[0] - A[0]) * t, y = A[1] + (B[1] - A[1]) * t;
+            h += `<path d="M${x} ${y}V${y - 16}" stroke="#334155" stroke-width="2.5"/>`;
+        }
+        h += `<path d="M${A[0]} ${A[1] - 16}L${B[0]} ${B[1] - 16}" stroke="#334155" stroke-width="3" stroke-linecap="round"/>`;
+    }
+    return h + '</g>';
+}
+
+// ════════════════════════════════════════════════════════════
+// 4) ناوبری و رندر
+// ════════════════════════════════════════════════════════════
+
+function go(i, p = 0) {
+    st = i;
+    ph = p;
+    pf = null;
+    Object.assign(S, { th: 0, fl: 1, k: 3, tg: 'B', show: false, nums: false, beam: null, hi: null, mark: null, pick: false, nest: 0, nhi: 0, bw: 4, bh: 3, ctx: 0, lab: 0, scene: 0, ox: 0, oy: 0, angL: 0, noTri: 0 });
+    if (i == 0)
+        S.pick = true;
+    if (i == 1)
+        S.hi = 'AC';
+    if (i == 2 || i == 5)
+        streak = 0;
+    if (i == 4) {
+        S.k = 3.6;
+        S.nest = 1 / 3;
+        S.nt = 1;
+        vis = {};
+    }
+    if (i == 5)
+        lv = 0;
+    if (i == 6) {
+        S.show = true;
+        spok = false;
+        Object.assign(S, SP[0].s);
+    }
+    if (i == 3) {
+        S.k = 1;
+        S.show = true;
+        S.nums = true;
+        rows = [];
+        q1 = false;
+        done = false;
+    }
+    render();
+}
+
+function render() {
+    if (qt) {
+        clearInterval(qt);
+        qt = 0;
+    }
+    if (st < 0) {
+        st == -1 ? menuV() : st == -2 ? lessonV() : areaV();
+        return;
+    }
+    $('figc').style.display = (st == 10 || st == 11) ? 'none' : '';
+    $('prog').innerHTML = `<button onclick="back()">${st == 14 ? 'بازگشت به آموزش' : st >= 12 ? 'بازگشت به مساحت' : st >= 10 ? 'بازگشت به منو' : 'بازگشت به آموزش'}</button>`;
+    [m1, m2, m3, fac, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14][st]();
+    draw();
+}
+
+function pick(n) {
+    if (st == 0) {
+        if (role(n) == 'opp') {
+            S.mark = n;
+            S.pick = false;
+            S.beam = 1;
+            S.anim = 1;
+            ph = 1;
+            render();
+        }
+        else {
+            S.beam = 1;
+            S.anim = 1;
+            draw();
+            note('bad', 'نه. پرتو نور از رأس B وارد زاویه می‌شود و به ضلع روبه‌رو می‌خورد؛ آن ضلع «مقابل» است. دوباره لمس کن.');
+        }
+    }
+    else if (st == 2) {
+        ok0 = role(n) == ask;
+        streak = ok0 ? streak + 1 : 0;
+        S.pick = false;
+        S.show = true;
+        S.beam = 1;
+        S.anim = 1;
+        ph = 2;
+        render();
+    }
+    else if (st == 5) {
+        sel.push(role(n));
+        selN.push(n);
+        S.hi = n;
+        if (sel.length == 1) {
+            render();
+            return;
+        }
+        S.hi = null;
+        ok0 = sel[0] == DEF[ask][0] && sel[1] == DEF[ask][1];
+        streak = ok0 ? streak + 1 : 0;
+        S.pick = false;
+        S.show = true;
+        S.beam = 1;
+        S.anim = 1;
+        ph = 2;
+        render();
+    }
+}
+
+function home(m = -1) {
+    st = m;
+    Object.assign(S, { th: 0, fl: 1, k: 3, tg: 'B', show: false, nums: false, beam: null, hi: null, mark: null, pick: false, nest: 0, nhi: 0, bw: 4, bh: 3, ctx: 0, lab: 0, scene: 0, ox: 0, oy: 0, angL: 0, noTri: 0 });
+    render();
+}
+
+function back() {
+    if (st == 14)
+        home(-2);
+    else if (st >= 12)
+        home(-3);
+    else if (st >= 10)
+        home();
+    else
+        home(-2);
+}
+
+// ════════════════════════════════════════════════════════════
+// 5) بخش A: شناخت اضلاع (مقابل، مجاور، وتر)
+// ════════════════════════════════════════════════════════════
+
+function m1() {
+    if (ph == 0)
+        put(`<p>کمان زرد، زاویه‌ی <b>B</b> است. ضلع <span class=o>مقابل</span> این زاویه را لمس کن.</p><div id=note></div>`);
+    if (ph == 1)
+        put(msg('good', 'درست است! پرتو نور از رأس B وارد زاویه می‌شود و به ضلع روبه‌رو می‌خورد؛ آن ضلع «مقابل» است.') + `<p><b>پیش‌بینی کن:</b> اگر این ضلع نارنجی را بچرخانیم تا افقی و پایین بیفتد، هنوز مقابل B است؟</p><button onclick="pr=1;ph=2;render()">بله، هنوز مقابل است</button><button onclick="pr=0;ph=2;render()">نه، عوض می‌شود</button>`);
+    if (ph == 2) {
+        put(`<p>مثلث را بچرخان تا ضلع نارنجی <b>افقی</b> شود:</p><label>چرخش</label><input type=range min=0 max=360 value=${S.th} oninput="S.th=+this.value;draw();chk()"><label>اندازه</label><input type=range min=2 max=3.6 step=.1 value=${S.k} oninput="S.k=+this.value;draw()"><button onclick="S.fl*=-1;draw();chk()">قرینه کن ↔</button><div id=note></div><button class=pri id=nx disabled onclick="go(1)">ماموریت بعدی ◀</button>`);
+        chk();
+    }
+}
+
+function chk() {
+    const p = pts();
+    if (Math.abs(p.A[1] - p.C[1]) < 9) {
+        note('good', (pr ? 'پیش‌بینی‌ات درست بود! ' : 'جالب بود، فکر می‌کردی عوض شود! ') + 'ضلع نارنجی افقی شد ولی پرتو از B هنوز به همین ضلع می‌خورد. <b>پس «مقابل» به جای ضلع روی صفحه بستگی ندارد؛ به زاویه بستگی دارد.</b>');
+        $('nx').disabled = false;
+    }
+    else
+        $('note').innerHTML = '';
+}
+
+const opts = () => ['opp', 'adj', 'hyp'].map(r => `<button onclick="q2('${r}')">${N[r]}</button>`).join('');
+
+function q2(r) {
+    if (role('AC') == r) {
+        ph++;
+        if (ph == 1)
+            S.tg = 'A';
+        S.beam = ph == 2 ? 1 : null;
+        S.anim = 1;
+        render();
+    }
+    else {
+        S.beam = 1;
+        S.anim = 1;
+        draw();
+        note('bad', 'پرتو نور را ببین: از رأس ' + S.tg + ' به ضلع «مقابل» می‌خورد. «مجاور» ضلعی است که به زاویه چسبیده (غیر از وتر). دوباره فکر کن.');
+    }
+}
+
+function m2() {
+    if (ph == 0)
+        put(`<p>ضلع <b style="color:#dc2626">قرمز (AC)</b> نسبت به زاویه‌ی <b>B</b> چیست؟</p>${opts()}<div id=note></div>`);
+    if (ph == 1)
+        put(msg('info', 'حالا زاویه را عوض کردیم: زاویه‌ی <b>A</b>.') + `<p>ضلع <b style="color:#dc2626">قرمز (AC)</b> نسبت به زاویه‌ی <b>A</b> چیست؟</p>${opts()}<div id=note></div>`);
+    if (ph == 2)
+        put(msg('good', 'ضلع AC همان ضلع است، ولی اسمش عوض شد!') + `<p>برای B «مقابل» بود و برای A «مجاور». <b>مقابل و مجاور به زاویه تعلق دارند، نه به خود ضلع.</b></p><button class=pri onclick="go(2)">ماموریت بعدی ◀</button>`);
+}
+
+function m3() {
+    if (ph == 0) {
+        Object.assign(S, { th: Math.random() * 360, fl: Math.random() < .5 ? 1 : -1, k: 2 + Math.random() * 1.5, tg: Math.random() < .5 ? 'B' : 'A', show: false, beam: null, pick: true });
+        ask = ['opp', 'adj', 'hyp'][Math.random() * 3 | 0];
+        ph = 1;
+    }
+    const d = '●'.repeat(streak) + '○'.repeat(3 - streak);
+    if (ph == 1)
+        put(`<p>ضلع «<b class=${CL[ask]}>${N[ask]}</b>» نسبت به زاویه‌ی <b>${S.tg}</b> را لمس کن.</p><div dir=ltr style="text-align:center">${d}</div><small>سه جواب درست پشت‌سرهم لازم است.</small>`);
+    if (ph == 2)
+        put(msg(ok0 ? 'good' : 'bad', ok0 ? 'درست!' : 'اشتباه شد و شمارش از اول شروع می‌شود. مقابل: ضلعی که پرتو از رأس به آن می‌خورد. مجاور: ضلع چسبیده به زاویه (غیر از وتر). وتر: روبه‌روی زاویه‌ی قائمه.') + `<div dir=ltr style="text-align:center">${d}</div>` + (streak >= 3 ? (fin('A'), `<button class=pri onclick="back()">بازگشت به منو ◀</button>`) : `<button class=pri onclick="ph=0;render()">مثلث بعدی</button>`));
+}
+
+// ════════════════════════════════════════════════════════════
+// 6) بخش B: ثابت بودن نسبت‌ها (کشف + اثبات با تشابه)
+// ════════════════════════════════════════════════════════════
+
+const pfm = (a, b) => pf == null ? '' : msg(pf ? 'good' : 'info', pf ? a : b);
+
+const add = k => {
+    S.k = k;
+    if (!rows.some(r => r.t == S.tg && r.k == k))
+        rows.push({ t: S.tg, k });
+    render();
+};
+
+function fac() {
+    if (ph == 0) {
+        put(`<p>یک مثلث ۳-۴-۵ داریم. زاویه‌ها را ثابت نگه می‌داریم و مثلث را بزرگ‌تر می‌کنیم.</p><p><b>پیش‌بینی کن:</b> کسر <span class=fr><i class=o>مقابل</i><i class=h>وتر</i></span> برای زاویه‌ی B وقتی مثلث بزرگ‌تر شود چه می‌شود؟</p><button onclick="pf=0;ph=1;render()">بزرگ‌تر می‌شود</button><button onclick="pf=0;ph=1;render()">کوچک‌تر می‌شود</button><button onclick="pf=1;ph=1;render()">تغییر نمی‌کند</button>`);
+        return;
+    }
+    const tr = rows.map(r => {
+        const o = (r.t == 'B' ? 3 : 4) * r.k, hy = 5 * r.k;
+        return `<tr><td>${r.t}</td><td>${fa(o)}</td><td>${fa(hy)}</td><td><span class=fr><i>${fa(o)}</i><i>${fa(hy)}</i></span></td><td>${fa(o / hy)}</td></tr>`;
+    }).join('');
+    const nB = rows.filter(r => r.t == 'B').length, nA = rows.length - nB;
+    let a;
+    const q2 = `<p><b>سوال:</b> نسبت «مقابل به وتر» فقط به چه چیزی بستگی دارد؟</p><button onclick="sen(0)">اندازه‌ی ضلع‌ها</button><button onclick="sen(1)">اندازه‌ی زاویه</button>`;
+    if (done)
+        a = msg('good', 'کشف خودت درست بود: نسبت‌ها فقط به زاویه بستگی دارند.') + `<p>اما آزمایش با چند عدد اثبات نیست. حالا آن را با تشابه اثبات می‌کنیم.</p><button class=pri onclick="go(4)">ادامه: اثبات ◀</button>`;
+    else if (nB < 2)
+        a = msg('info', `برای زاویه‌ی B ${fa(2 - nB)} اندازه‌ی ${nB ? 'دیگر ' : ''}اضافه کن.`);
+    else if (!q1)
+        a = `<p><b>سوال:</b> برای زاویه‌ی B، وقتی اندازه‌ی مثلث عوض شد، عدد ستون آخر چه شد؟</p><button onclick="a1(0)">بیشتر شد</button><button onclick="a1(1)">کمتر شد</button><button onclick="a1(2)">ثابت ماند</button>`;
+    else if (nA < 2)
+        a = msg('info', `درست است، برای B ثابت ماند! حالا زاویه را عوض کنیم: دکمه‌ی «زاویه‌ی فعلی» را بزن تا A بشود، بعد ${fa(2 - nA)} اندازه‌ی ${nA ? 'دیگر ' : ''}اضافه کن.`);
+    else
+        a = q2;
+    put((q1 ? '' : pfm('پیش‌بینی‌ات درست بود! حالا با جدول مطمئن شو.', 'پیش‌بینی‌ات با واقعیت فرق داشت؛ بیا با جدول بررسی کنیم.')) + `<p>اندازه را انتخاب کن تا به جدول اضافه شود.</p>${[1, 2, 3].map(k => `<button class="${S.k == k ? 'pri' : ''}" onclick="add(${k})">×${fa(k)}</button>`).join('')}<br><button onclick="S.tg=S.tg=='B'?'A':'B';render()">زاویه‌ی فعلی: ${S.tg} (تغییر)</button><table><tr><th>زاویه</th><th>مقابل</th><th>وتر</th><th>نسبت</th><th>عدد</th></tr>${tr}</table>${a}<div id=note></div>`);
+}
+
+function a1(i) {
+    if (i == 2) {
+        q1 = true;
+        render();
+    }
+    else
+        note('bad', 'به ستون آخر جدول نگاه کن: در همه‌ی ردیف‌های B عدد یکی است؟');
+}
+
+function sen(i) {
+    if (i) {
+        done = true;
+        render();
+    }
+    else
+        note('bad', 'به ستون آخر نگاه کن: وقتی اندازه‌ی ضلع‌ها عوض شد، عدد آخر هم عوض شد؟ وقتی زاویه عوض شد چه؟');
+}
+
+const H4 = ['', 'هر دو مثلث قائمه‌اند و زاویه‌ی B مشترک است.', 'ضلعی را پیدا کن که در هر دو مثلث روبه‌روی زاویه‌ی B است.', 'طرفین و وسطین: DE×AB = AC×BE. حالا دوباره کسر بساز.', 'ستون آخر را برای ×۱ و ×۲ مقایسه کن؛ هر سه ردیف را ببین.'];
+
+function a4(ok) {
+    if (ok) {
+        ph++;
+        render();
+    }
+    else
+        note('bad', H4[ph]);
+}
+
+function nt(t) {
+    S.nt = t;
+    S.nest = t / 3;
+    vis[t] = 1;
+    render();
+}
+
+function m4() {
+    S.nhi = ph == 2 ? 1 : 0;
+    if (ph == 0)
+        put(`<p><b>فرض:</b> دو مثلث قائم‌الزاویه‌ی ABC و DBE زاویه‌ی حاده‌ی B را مشترک دارند.</p><p><b>حکم:</b> نسبت «مقابل به وتر» در هر دو برابر است؛ یعنی ${lf('DE', 'BE')} = ${lf('AC', 'AB')}</p><p>آزمایش به‌تنهایی اثبات نیست؛ پس حکم را قدم‌به‌قدم اثبات می‌کنیم.</p><p><b>پیش‌بینی کن:</b> کسر اول، نسبت «مقابل به وتر» در مثلث کوچک DBE است و کسر دوم همین نسبت در مثلث بزرگ ABC. این دو چه رابطه‌ای دارند؟</p><p style="text-align:center">${lf('DE', 'BE')} ؟ ${lf('AC', 'AB')}</p><button onclick="pf=1;a4(1)">برابرند</button><button onclick="pf=0;a4(1)">اولی بزرگ‌تر است</button><button onclick="pf=0;a4(1)">اولی کوچک‌تر است</button>`);
+    if (ph == 1)
+        put(pfm('پیش‌بینی‌ات درست بود! حالا آن را اثبات می‌کنیم.', 'پیش‌بینی‌ات با حکم فرق داشت؛ بیا اثبات کنیم.') + `<p><b>گام ۱:</b> زاویه‌های دو مثلث ABC و DBE را مقایسه کن. کدام زاویه‌ها برابرند؟</p><button onclick="a4(0)">فقط زاویه‌ی B</button><button onclick="a4(1)">B مشترک است و D و C هر دو ۹۰° هستند</button><button onclick="a4(0)">هیچ زاویه‌ای برابر نیست</button><div id=note></div>`);
+    if (ph == 2)
+        put(msg('good', 'درست است. پس طبق حالت دو زاویه، دو مثلث متشابه‌اند.') + `<p><b>گام ۲:</b> ضلع قرمز DE در مثلث ABC با کدام ضلع متناظر است؟</p><button onclick="a4(1)">AC</button><button onclick="a4(0)">BC</button><button onclick="a4(0)">AB</button><div id=note></div>`);
+    if (ph == 3)
+        put(msg('good', 'DE متناظر AC است. پس اضلاع متناظر متناسب‌اند:') + `<p style="text-align:center">${lf('DE', 'AC')} = ${lf('BD', 'BC')} = ${lf('BE', 'AB')}</p><p><b>گام ۳:</b> از ${lf('DE', 'AC')} = ${lf('BE', 'AB')} کدام نتیجه درست است؟</p><button onclick="a4(1)">${lf('DE', 'BE')} = ${lf('AC', 'AB')}</button><button onclick="a4(0)">${lf('DE', 'BE')} = ${lf('AB', 'AC')}</button><button onclick="a4(0)">${lf('DE', 'AB')} = ${lf('AC', 'BE')}</button><div id=note></div>`);
+    if (ph == 4) {
+        vis[S.nt] = 1;
+        const I = { opp: 3 * S.nt, adj: 4 * S.nt, hyp: 5 * S.nt }, O = { opp: 9, adj: 12, hyp: 15 };
+        const tr = [['opp', 'hyp'], ['adj', 'hyp'], ['opp', 'adj']].map(([n, d]) => `<tr><td>${frs(n, d)}</td><td>${nf(I[n], I[d])}</td><td>${nf(O[n], O[d])}</td><td>${dec(O[n] / O[d])}</td></tr>`).join('');
+        put(msg('good', 'حکم ثابت شد: نسبت مقابل به وتر به اندازه‌ی مثلث بستگی ندارد.') + `<p><b>گام ۴:</b> حالا امتحان کن. اندازه‌ی مثلث DBE را عوض کن:</p>${[1, 2].map(t => `<button class="${S.nt == t ? 'pri' : ''}" onclick="nt(${t})">×${fa(t)}</button>`).join('')}<table><tr><th>نسبت</th><th>DBE</th><th>ABC</th><th>عدد</th></tr>${tr}</table>` + (vis[1] && vis[2] ? `<p><b>سوال:</b> با تغییر اندازه‌ی DBE کدام نسبت‌ها ثابت ماندند؟</p><button onclick="a4(0)">فقط مقابل/وتر</button><button onclick="a4(1)">هر سه نسبت</button><button onclick="a4(0)">هیچ‌کدام</button>` : '') + '<div id=note></div>');
+    }
+    if (ph == 5) {
+        S.nest = 0;
+        fin('B');
+        put(msg('good', 'درست است! این نسبت‌ها فقط به زاویه بستگی دارند؛ پس برای هر زاویه اسم می‌گیرند.') + NM('سینوس', 'sin B', frs('opp', 'hyp')) + NM('کسینوس', 'cos B', frs('adj', 'hyp')) + NM('تانژانت', 'tan B', frs('opp', 'adj')) + NM('کتانژانت (معکوس تانژانت)', 'cot B', frs('adj', 'opp')) + `<button class=pri onclick="back()">بازگشت به منو ◀</button>`);
+    }
+}
+
+// ════════════════════════════════════════════════════════════
+// 7) بخش D: تمرین نام‌گذاری نسبت‌ها
+// ════════════════════════════════════════════════════════════
+
+const LV = ['sin', 'cos', 'tan', 'cot', 0], LN = ['سینوس', 'کسینوس', 'تانژانت', 'کتانژانت', 'ترکیبی'], NEED = [2, 2, 2, 2, 3];
+
+function m5() {
+    if (ph == 0) {
+        ask = LV[lv] || Object.keys(DEF)[Math.random() * 4 | 0];
+        Object.assign(S, { th: Math.random() * 360, fl: Math.random() < .5 ? 1 : -1, k: 2 + Math.random() * 1.5, tg: Math.random() < .5 ? 'B' : 'A', show: false, nums: false, beam: null, pick: true, hi: null });
+        sel = [];
+        selN = [];
+        ph = 1;
+    }
+    const nd = NEED[lv], d = '●'.repeat(streak) + '○'.repeat(nd - streak), hd = `<small>مرحله ${fa(lv + 1)} از ۵: ${LN[lv]}</small>`;
+    if (ph == 1)
+        put(hd + `<p>برای زاویه‌ی <b>${S.tg}</b> مقدار <b dir=ltr>${ask} ${S.tg}</b> را بساز: اول ضلع <b>صورت</b>، بعد ضلع <b>مخرج</b> را روی شکل لمس کن.</p><div class=fm><span>${ask} ${S.tg} =</span>${lf(selN[0] || '؟', selN[1] || '؟')}</div><div dir=ltr style="text-align:center">${d}</div><small>${fa(nd)} جواب درست پشت‌سرهم لازم است.</small>`);
+    if (ph == 2) {
+        const fd = streak >= nd;
+        put(hd + msg(ok0 ? 'good' : 'bad', ok0 ? 'درست!' : 'اشتباه شد و شمارش این مرحله از اول شروع می‌شود.') + `<p>انتخاب تو: ${mt(ask + ' ' + S.tg + ' = ' + lf(selN[0], selN[1]))}</p><div class=fm><span>${ask} ${S.tg} =</span>${frs(...DEF[ask])}</div><div dir=ltr style="text-align:center">${d}</div>` + (fd ? (lv < 4 ? msg('good', 'این مرحله تمام شد!') + `<button class=pri onclick="lv++;streak=0;ph=0;render()">مرحله بعد: ${LN[lv + 1]} ◀</button>` : (fin('D'), msg('good', 'آفرین! همه‌ی مرحله‌ها تمام شد.')) + `<button class=pri onclick="back()">بازگشت به منو ◀</button>`) : `<button class=pri onclick="ph=0;render()">مثلث بعدی</button>`));
+    }
+}
+
+// ════════════════════════════════════════════════════════════
+// 8) بخش E: زوایای ویژه ۳۰، ۴۵ و ۶۰
+// ════════════════════════════════════════════════════════════
+
+const SP = [
+    { s: { bw: 4, bh: 4, ctx: 'sq', tg: 'B', angL: 0, lab: { AC: '1', BC: '1', AB: '؟' } }, t: 'مربعی به ضلع ۱ را با قطرش نصف کرده‌ایم. زاویه‌ی B چند درجه است؟', o: [mt('۳۰°'), mt('۴۵°'), mt('۶۰°')], a: 1, af: { angL: '۴۵°' }, m: `قطر، زاویه‌ی ۹۰° را نصف می‌کند؛ پس ${mt('۴۵°')} است. این زاویه را روی شکل نوشتیم.` },
+    { t: 'طول قطر (وتر) با فیثاغورس چقدر است؟', o: [mt('۲'), mt(R2), mt('۱٫۵')], a: 1, af: { lab: { AC: '1', BC: '1', AB: '√2' } }, m: `${mt('۱² + ۱² = ۲')} پس وتر ${mt(R2)} است.` },
+    { t: `حالا ${mt('sin ۴۵°')} چند است؟ (مقابل ÷ وتر؛ از همین شکل کمک بگیر)`, o: [mt(half), mt(h2), mt(s3), mt('۱')], a: 1, m: `مقابل ۱ و وتر ${mt(R2)} است: ${mt('sin ۴۵° = ' + lf('۱', R2) + ' = ' + h2)}` },
+    { t: `${mt('cos ۴۵°')} چند است؟`, o: [mt(h2), mt(half), mt('۱'), mt(s3)], a: 0, m: `مجاور ۱ و وتر ${mt(R2)} است: ${mt('cos ۴۵° = ' + lf('۱', R2) + ' = ' + h2)}` },
+    { t: `${mt('tan ۴۵°')} چند است؟`, o: [mt('۱'), mt(R2), mt(h2), mt('۰')], a: 0, m: `مقابل و مجاور هر دو ۱ هستند: ${mt('tan ۴۵° = ۱ ÷ ۱ = ۱')}` },
+    { s: { bw: 2, bh: 3.4641, ctx: 'eq', tg: 'B', angL: 0, lab: { AC: '؟', BC: '1', AB: '2' } }, t: 'مثلث متساوی‌الاضلاعی به ضلع ۲ را با ارتفاعش نصف کرده‌ایم. زاویه‌ی B چند درجه است؟', o: [mt('۳۰°'), mt('۴۵°'), mt('۶۰°')], a: 2, af: { angL: '۶۰°' }, m: 'زاویه‌های مثلث متساوی‌الاضلاع ۶۰° هستند و ارتفاع قاعده را نصف می‌کند؛ پس BC = ۱. زاویه را روی شکل نوشتیم.' },
+    { t: 'ارتفاع AC با فیثاغورس چقدر است؟', o: [mt('۳'), mt(R3), mt('۱٫۵')], a: 1, af: { lab: { AC: '√3', BC: '1', AB: '2' } }, m: `${mt('۲² − ۱² = ۳')} پس ${mt('AC = ' + R3)}` },
+    { t: `${mt('sin ۶۰°')} چند است؟ (زاویه‌ی B)`, o: [mt(half), mt(s3), mt(R3), mt(h2)], a: 1, m: `مقابل ${mt(R3)} و وتر ۲ است: ${mt('sin ۶۰° = ' + s3)}` },
+    { t: `${mt('cos ۶۰°')} چند است؟`, o: [mt(half), mt(s3), mt(R3), mt('۱')], a: 0, m: `مجاور ۱ و وتر ۲ است: ${mt('cos ۶۰° = ' + half)}` },
+    { t: `${mt('tan ۶۰°')} چند است؟`, o: [mt(t3), mt(R3), mt(half), mt('۱')], a: 1, m: `مقابل ${mt(R3)} و مجاور ۱ است: ${mt('tan ۶۰° = ' + R3)}` },
+    { s: { tg: 'A', angL: 0 }, t: `حالا به زاویه‌ی A نگاه کن. این زاویه چند درجه است؟ (مجموع زاویه‌های مثلث ${mt('۱۸۰°')} است)`, o: [mt('۳۰°'), mt('۴۵°'), mt('۶۰°')], a: 0, af: { angL: '۳۰°' }, m: `${mt('۱۸۰° − ۹۰° − ۶۰° = ۳۰°')}` },
+    { t: `${mt('sin ۳۰°')} چند است؟`, o: [mt(half), mt(s3), mt(R3), mt('۱')], a: 0, m: `برای A، مقابل ۱ و وتر ۲ است: ${mt('sin ۳۰° = ' + half)}` },
+    { t: `${mt('cos ۳۰°')} چند است؟`, o: [mt(s3), mt(half), mt(R3), mt('۱')], a: 0, m: `مجاور ${mt(R3)} و وتر ۲ است: ${mt('cos ۳۰° = ' + s3)}` },
+    { t: `${mt('tan ۳۰°')} چند است؟`, o: [mt(t3), mt(R3), mt(half), mt('۱')], a: 0, m: `مقابل ۱ و مجاور ${mt(R3)} است: ${mt('tan ۳۰° = ' + lf('۱', R3) + ' = ' + t3)}` }
+];
+
+function sp(i) {
+    const q = SP[ph];
+    if (i == q.a) {
+        Object.assign(S, q.af || {});
+        spok = true;
+        render();
+    }
+    else
+        note('bad', 'دوباره فکر کن؛ از شکل و فیثاغورس کمک بگیر.');
+}
+
+function nx() {
+    ph++;
+    spok = false;
+    if (SP[ph] && SP[ph].s)
+        Object.assign(S, SP[ph].s);
+    render();
+}
+
+function m6() {
+    if (ph >= SP.length) {
+        fin('E');
+        const c = (a, b) => `<td>${mt(lf(a, b))}</td>`;
+        put(msg('good', 'آفرین! همه‌ی نسبت‌های زوایای ۳۰°، ۴۵° و ۶۰° را خودت کشف کردی؛ لازم نیست حفظشان کنی.') + `<table><tr><th>زاویه</th><th>sin</th><th>cos</th><th>tan</th></tr><tr><td>${mt('۳۰°')}</td>${c('۱', '۲')}${c(R3, '۲')}${c('۱', R3)}</tr><tr><td>${mt('۴۵°')}</td>${c(R2, '۲')}${c(R2, '۲')}<td>${mt('۱')}</td></tr><tr><td>${mt('۶۰°')}</td>${c(R3, '۲')}${c('۱', '۲')}<td>${mt(R3)}</td></tr></table><button class=pri onclick="back()">بازگشت به منو ◀</button>`);
+        return;
+    }
+    const q = SP[ph];
+    put(`<p>${q.t}</p>` + (spok ? msg('good', q.m) + `<button class=pri onclick="nx()">ادامه ◀</button>` : q.o.map((x, i) => [i, x]).sort(() => Math.random() - .5).map(([i, x]) => `<button onclick="sp(${i})">${x}</button>`).join('') + '<div id=note></div>'));
+}
+
+// ════════════════════════════════════════════════════════════
+// 9) بخش F: روابط مثلثاتی
+// ════════════════════════════════════════════════════════════
+
+const H7 = ['۰٫۶ ÷ ۰٫۸ را حساب کن؛ مثل ۶ ÷ ۸ است.', 'tan B یعنی مقابل ÷ مجاور.', 'در تقسیم دو کسر با مخرج مشترک AB، مخرج‌ها ساده می‌شوند.', '', 'مربع‌ها را حساب کن: (۵/۱۳)² و (۱۲/۱۳)².', 'وقتی مخرج‌ها یکی است، فقط صورت‌ها جمع می‌شوند.', 'رابطه‌ی بین سه ضلع مثلث قائم‌الزاویه را به یاد بیار.'];
+
+function a7(ok) {
+    if (ok) {
+        ph++;
+        render();
+    }
+    else
+        note('bad', H7[ph]);
+}
+
+const B3 = a => a.slice().sort(() => Math.random() - .5).map(([ok, h]) => `<button onclick="a7(${ok})">${h}</button>`).join('') + '<div id=note></div>';
+
+function m7() {
+    Object.assign(S, { show: true }, ph < 4 ? { bw: 4, bh: 3, k: 3, lab: { AC: '3', BC: '4', AB: '5' } } : { bw: 12, bh: 5, k: 1.6, lab: { AC: '5', BC: '12', AB: '13' } });
+    if (ph == 0)
+        put(`<p><b>رابطه‌ی اول.</b> در این مثلث برای زاویه‌ی B داریم:</p><p>${mt('sin B = ' + lf('۳', '۵') + ' = ۰٫۶')}</p><p>${mt('cos B = ' + lf('۴', '۵') + ' = ۰٫۸')}</p><p><b>پیش‌بینی کن:</b> ${mt('sin B ÷ cos B')} چه عددی می‌شود؟</p>` + B3([[1, '۰٫۷۵'], [0, '۱٫۳۳'], [0, '۰٫۴۸']]));
+    if (ph == 1)
+        put(msg('good', `درست است! و ${mt('tan B = ' + lf('۳', '۴') + ' = ۰٫۷۵')} هم همین است. تصادفی است؟`) + `<p><b>فرض:</b> مثلث ABC در رأس C قائمه است.</p><p><b>حکم:</b> ${mt('tan B = ' + lf('sin B', 'cos B'))}</p><p>آزمایش اثبات نیست؛ پس اثبات می‌کنیم.</p><p><b>گام ۱:</b> ${mt('tan B')} را با ضلع‌ها بنویس:</p>` + B3([[1, mt(lf('AC', 'BC'))], [0, mt(lf('BC', 'AC'))], [0, mt(lf('AC', 'AB'))]]));
+    if (ph == 2)
+        put(msg('good', `درست است: ${mt('tan B = ' + lf('AC', 'BC'))}`) + `<p><b>گام ۲:</b> می‌دانیم ${mt('sin B = ' + lf('AC', 'AB'))} و ${mt('cos B = ' + lf('BC', 'AB'))}. حاصل ${mt(lf('AC', 'AB') + ' ÷ ' + lf('BC', 'AB'))} کدام است؟</p>` + B3([[1, mt(lf('AC', 'BC'))], [0, mt(lf('BC', 'AC'))], [0, mt(lf('AC', 'AB'))]]));
+    if (ph == 3)
+        put(msg('good', 'اثبات کامل شد:') + `<div class=nm><div class=fm><span>tan B =</span>${lf('sin B', 'cos B')}</div></div><p>یعنی تانژانت هر زاویه‌ی حاده برابر است با سینوس آن تقسیم بر کسینوسش.</p><button class=pri onclick="ph=4;render()">رابطه‌ی دوم ◀</button>`);
+    if (ph == 4)
+        put(`<p><b>رابطه‌ی دوم.</b> مثلث جدید؛ برای زاویه‌ی B:</p><p>${mt('sin B = ' + lf('۵', '۱۳'))}</p><p>${mt('cos B = ' + lf('۱۲', '۱۳'))}</p><p><b>پیش‌بینی کن:</b> ${mt('sin² B + cos² B')} چند می‌شود؟</p>` + B3([[1, '۱'], [0, '۰٫۹'], [0, '۱٫۵']]));
+    if (ph == 5)
+        put(msg('good', 'درست است! ' + mt(lf('۲۵', '۱۶۹') + ' + ' + lf('۱۴۴', '۱۶۹') + ' = ۱')) + `<p><b>فرض:</b> مثلث ABC در رأس C قائمه است.</p><p><b>حکم:</b> ${mt('sin² B + cos² B = ۱')}</p><p><b>گام ۱:</b> ${mt(lf('AC²', 'AB²') + ' + ' + lf('BC²', 'AB²'))} (همان ${mt('sin² B + cos² B')}) برابر کدام است؟</p>` + B3([[1, mt(lf('AC²+BC²', 'AB²'))], [0, mt(lf('AC²+BC²', '۲AB²'))], [0, mt(lf('AC+BC', 'AB'))]]));
+    if (ph == 6)
+        put(`<p><b>گام ۲:</b> ${mt('AC² + BC²')} طبق چه قضیه‌ای با ${mt('AB²')} برابر است؟</p>` + B3([[1, 'فیثاغورس'], [0, 'تالس'], [0, 'نیمساز']]));
+    if (ph == 7) {
+        fin('F');
+        put(msg('good', 'اثبات کامل شد:') + `<p>${mt(lf('AC²+BC²', 'AB²') + ' = ' + lf('AB²', 'AB²') + ' = ۱')}</p><div class=nm><div class=fm><span>sin² B + cos² B = ۱</span></div></div><p>به‌یاد داشته باش: ${mt('sin² B')} یعنی ${mt('(sin B)²')}.</p><button class=pri onclick="back()">بازگشت به منو ◀</button>`);
+    }
+}
+
+// ════════════════════════════════════════════════════════════
+// 10) بخش G: حل مسئله (نردبان، سایه، رمپ، درخت)
+// ════════════════════════════════════════════════════════════
+
+const PB = [
+    { w: 5.2, h: 3, lab: { AC: '؟', BC: '', AB: '6' }, sc: 'ladder', u: 26, cx: 95, g: 200, tx: `نردبانی به طول ۶ متر با زمین زاویه‌ی ${mt('۳۰°')} می‌سازد. ارتفاعی که نردبان به دیوار می‌رسد (AC) چقدر است؟`, r: 'sin', eq: mt('sin ۳۰° = ' + lf('AC', '۶')), o: [mt('۳'), mt('۳' + R3), mt('۱۲')], a: 0, m: `${mt('sin ۳۰° = ' + lf('۱', '۲'))} پس ${mt(lf('AC', '۶') + ' = ' + lf('۱', '۲'))} و ${mt('AC = ۳')} متر.` },
+    { w: 4.5, h: 4.5, sc: 'bld', u: 26, cx: 104, g: 205, lab: { AC: '8', BC: '؟', AB: '' }, tx: `ساختمانی ۸ متر ارتفاع دارد. وقتی زاویه‌ی تابش خورشید با زمین ${mt('۴۵°')} است، طول سایه‌ی ساختمان (BC) چقدر است؟`, r: 'tan', eq: mt('tan ۴۵° = ' + lf('۸', 'BC')), o: [mt('۸'), mt('۸' + R2), mt('۴')], a: 0, m: `${mt('tan ۴۵° = ۱')} پس ${mt(lf('۸', 'BC') + ' = ۱')} و ${mt('BC = ۸')} متر.` },
+    { w: 3, h: 5.2, sc: 'ramp', u: 22, cx: 122, g: 205, lab: { AC: '', BC: '4', AB: '؟' }, tx: `رمپی با زمین زاویه‌ی ${mt('۶۰°')} می‌سازد و فاصله‌ی افقی پای رمپ تا دیوار (BC) ۴ متر است. طول رمپ (AB) چقدر است؟`, r: 'cos', eq: mt('cos ۶۰° = ' + lf('۴', 'AB')), o: [mt('۸'), mt('۲'), mt('۴' + R3)], a: 0, m: `${mt('cos ۶۰° = ' + lf('۱', '۲'))} پس ${mt(lf('۴', 'AB') + ' = ' + lf('۱', '۲'))} و ${mt('AB = ۸')} متر.` },
+    { w: 5.2, h: 3, lab: { AC: '؟', BC: '9', AB: '' }, sc: 'tree', u: 26, cx: 92, g: 205, tx: `سایه‌ی یک درخت ۹ متر است و زاویه‌ی تابش خورشید با زمین ${mt('۳۰°')} است. ارتفاع درخت (AC) چقدر است؟`, r: 'tan', eq: mt('tan ۳۰° = ' + lf('AC', '۹')), o: [mt('۳' + R3), mt('۹' + R3), mt('۳')], a: 0, m: `${mt('tan ۳۰° = ' + lf('۱', R3))} پس ${mt('AC = ' + lf('۹', R3) + ' = ' + lf('۹' + R3, '۳') + ' = ۳' + R3)} متر.` }
+];
+
+function pb(ok) {
+    if (ok) {
+        ph++;
+        render();
+    }
+    else if (ph % 4 == 1) {
+        S.show = true;
+        draw();
+        note('bad', 'رنگ‌ها را ببین: ضلع معلوم و ضلع مجهول نسبت به زاویه‌ی B کدام‌اند؟ (نارنجی مقابل، آبی مجاور، بنفش وتر.) نسبتی را بردار که همین دو ضلع را به هم وصل می‌کند.');
+    }
+    else
+        note('bad', 'مقدار نسبت را از جدول زوایای ویژه بگذار و معادله را حل کن.');
+}
+
+function m8() {
+    const pi = ph >> 2, t = ph % 4;
+    if (pi >= PB.length) {
+        S.scene = 0;
+        S.noTri = 0;
+        fin('G');
+        put(msg('good', 'آفرین! چهار مسئله را حل کردی.') + '<p>راه حل همیشه همین است: ضلع معلوم و مجهول را نسبت به زاویه نام‌گذاری کن، نسبت مناسب را انتخاب کن، معادله بنویس و حل کن.</p><button class=pri onclick="back()">بازگشت به منو ◀</button>');
+        return;
+    }
+    const q = PB[pi];
+    Object.assign(S, { show: t > 1, bw: q.w, bh: q.h, k: q.u / 12, lab: q.lab, tg: 'B', scene: q.sc, noTri: t == 0 ? 1 : 0, ox: 0, oy: 0 });
+    const p0 = pts();
+    S.ox = q.cx - p0.C[0];
+    S.oy = q.g - p0.C[1];
+    const hd = `<small>مسئله‌ی ${fa(pi + 1)} از ${fa(PB.length)}</small>`;
+    if (t == 0)
+        put(hd + `<p>${q.tx}</p><button class=pri onclick="ph++;render()">بریم حل کنیم ◀</button>`);
+    if (t == 1)
+        put(hd + `<p>مثلث قائم‌الزاویه‌ی داخل تصویر را ببین (ضلع معلوم و مجهول روی آن مشخص‌اند).</p><p><b>گام ۱:</b> کدام نسبت ضلع معلوم و ضلع مجهول را به هم وصل می‌کند؟</p>` + ['sin', 'cos', 'tan'].map(r => `<button onclick="pb(${r == q.r ? 1 : 0})">${mt(r + ' B')}</button>`).join('') + '<div id=note></div>');
+    if (t == 2)
+        put(hd + msg('good', 'درست است!') + `<p>${q.eq}</p><p><b>گام ۲:</b> با مقدار نسبت، مجهول را حساب کن:</p>` + q.o.map((h, i) => [i == q.a ? 1 : 0, h]).sort(() => Math.random() - .5).map(([ok, h]) => `<button onclick="pb(${ok})">${h}</button>`).join('') + '<div id=note></div>');
+    if (t == 3)
+        put(hd + msg('good', q.m) + `<button class=pri onclick="ph++;render()">${pi < PB.length - 1 ? 'مسئله‌ی بعد ◀' : 'پایان ◀'}</button>`);
+}
+
+// ════════════════════════════════════════════════════════════
+// 11) بخش H: ارتفاع در مثلث غیرقائم
+// ════════════════════════════════════════════════════════════
+
+const Hs = { A: [170, 50], tg: 'B', alt: 0, show: 0, pick: 0, cur: null, drag: 0, hi: null };
+
+let Hq = 'opp', Hr = 'sin', hk = 0, hc = 0, Hok = true;
+
+const hSd = () => ({ hyp: Hs.tg == 'B' ? 'AB' : 'AC', adj: Hs.tg == 'B' ? 'BH' : 'CH' });
+
+const roleH = n => {
+    const q = hSd();
+    return n == 'AH' ? 'opp' : n == q.hyp ? 'hyp' : n == q.adj ? 'adj' : null;
+};
+
+function newH() {
+    Hs.A = [100 + Math.random() * 110, 45 + Math.random() * 45];
+    Hs.tg = Math.random() < .5 ? 'B' : 'C';
+    Hs.cur = null;
+    Hs.drag = 0;
+    Hs.B = null;
+    Hs.K = null;
+    Hs.ex = 0;
+    Hs.lab = null;
+    Hs.angs = null;
+    Hs.scn = 0;
+}
+
+function drawH() {
+    const A = Hs.A, B = Hs.B || [40, 205], K = Hs.K || [260, 205], H = [A[0], 205], V = Hs.tg == 'B' ? B : K, O = Hs.tg == 'B' ? K : B, u = (a, b, l) => {
+        const dx = b[0] - a[0], dy = b[1] - a[1], d = Math.hypot(dx, dy);
+        return [dx / d * l, dy / d * l];
+    };
+    if (Hs.scn == 1) {
+        $('fig').innerHTML = DEFS + sceneP(A, B, K, H);
+        return;
+    }
+    let h = DEFS + (Hs.scn == 2 ? sceneP(A, B, K, H) : `<polygon points="${A} ${B} ${K}" fill="url(#tg)" filter="url(#sh)"/>`);
+    const sg = Hs.alt ? [['AH', A, H], ['AB', A, B], ['AC', A, K], ['BH', B, H], ['CH', H, K]] : [['AB', A, B], ['AC', A, K], ['BC', B, K]];
+    for (const [n, a, b] of sg) {
+        const r = Hs.show && Hs.alt ? roleH(n) : null, hh = Hs.hi && Hs.hi.includes(n), col = hh ? '#dc2626' : (r ? C[r] : (n == 'AH' && !Hs.pick ? '#dc2626' : '#64748b'));
+        h += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${col}" stroke-width="${r || hh || n == 'AH' ? 6 : 5}" stroke-linecap="round" stroke-opacity="${Hs.show && Hs.alt && !r ? .35 : 1}"/>`;
+    }
+    if (Hs.alt) {
+        const ux = (V[0] > H[0] ? 1 : -1) * 10;
+        h += `<path d="M${H[0] + ux} ${H[1]}v-10h${-ux}" fill="#e0e7ff" stroke="#334155" stroke-width="1.6"/>`;
+    }
+    if (Hs.cur)
+        h += `<line x1="${A[0]}" y1="${A[1]}" x2="${Hs.cur[0]}" y2="${Hs.cur[1]}" stroke="#dc2626" stroke-width="4" stroke-dasharray="6 5" stroke-linecap="round"/>`;
+    const e1 = u(V, O, 26), e2 = u(V, A, 26), cr = e1[0] * e2[1] - e1[1] * e2[0];
+    h += `<path d="M${V[0]} ${V[1]}L${V[0] + e1[0]} ${V[1] + e1[1]}A26 26 0 0 ${cr > 0 ? 1 : 0} ${V[0] + e2[0]} ${V[1] + e2[1]}Z" fill="#fde68acc" stroke="#d97706" stroke-width="2.5" stroke-linejoin="round"/>`;
+    if (Hs.ex) {
+        for (const [Vv, Oo, lt] of [[B, K, Hs.angs.B], [K, B, Hs.angs.C]]) {
+            const a1 = u(Vv, Oo, 26), a2 = u(Vv, A, 26), c2 = a1[0] * a2[1] - a1[1] * a2[0], mx = a1[0] + a2[0], my = a1[1] + a2[1], ml = Math.hypot(mx, my) || 1;
+            h += `<path d="M${Vv[0]} ${Vv[1]}L${Vv[0] + a1[0]} ${Vv[1] + a1[1]}A26 26 0 0 ${c2 > 0 ? 1 : 0} ${Vv[0] + a2[0]} ${Vv[1] + a2[1]}Z" fill="#fde68acc" stroke="#d97706" stroke-width="2.5" stroke-linejoin="round"/><text class=hl x="${Vv[0] + mx / ml * 50}" y="${Vv[1] + my / ml * 50}" font-size="14" font-weight="700" fill="#b45309" text-anchor="middle" dominant-baseline="middle">${lt}</text>`;
+        }
+    }
+    if (Hs.lab) {
+        const lb = (x, y, t) => String(t).includes('√') ? `<foreignObject x="${x - 36}" y="${y - 14}" width="72" height="28"><div xmlns="http://www.w3.org/1999/xhtml" style="display:flex;justify-content:center;align-items:center;height:28px;font:700 15px sans-serif;color:#0f172a;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;direction:ltr">${fxi(String(t))}</div></foreignObject>` : `<text class=hl x="${x}" y="${y}" font-size="15" font-weight="700" fill="#0f172a" text-anchor="middle" dominant-baseline="middle">${fa(t)}</text>`, md = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+        if (Hs.lab.AB) {
+            const q = md(A, B);
+            h += lb(q[0] - 20, q[1] - 8, Hs.lab.AB);
+        }
+        if (Hs.lab.AC) {
+            const q = md(A, K);
+            h += lb(q[0] + 20, q[1] - 8, Hs.lab.AC);
+        }
+        if (Hs.lab.AH && Hs.alt)
+            h += lb(A[0] - 17, (A[1] + 205) / 2, Hs.lab.AH);
+    }
+    const L = [['A', A, [0, -14]], ['B', B, [-14, 12]], ['C', K, [14, 12]]];
+    if (Hs.alt)
+        L.push(['H', H, [0, 19]]);
+    for (const [n, q, o] of L)
+        h += `<circle cx="${q[0]}" cy="${q[1]}" r="4.5" fill="#fff" stroke="#334155" stroke-width="2"/><text class="hl" x="${q[0] + o[0]}" y="${q[1] + o[1]}" font-size="17" font-weight="700" fill="#1e293b" text-anchor="middle" dominant-baseline="middle">${n}</text>`;
+    if (Hs.pick)
+        for (const [n, a, b] of sg)
+            h += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="transparent" stroke-width="28" onclick="pickH('${n}')"/>`;
+    const f = $('fig');
+    f.innerHTML = h;
+    if (f.style)
+        f.style.touchAction = dragOK() ? 'none' : '';
+}
+
+const hs1 = () => {
+    Hq = ['opp', 'adj', 'hyp'][Math.random() * 3 | 0];
+    newH();
+    Object.assign(Hs, { alt: 1, show: 0, pick: 1, hi: null });
+    ph = 1;
+    render();
+};
+
+const hs3 = () => {
+    newH();
+    Object.assign(Hs, { alt: 0, show: 0, pick: 0, hi: null });
+    ph = 3;
+    render();
+};
+
+const startR = () => {
+    Hr = ['sin', 'cos', 'tan', 'cot'][Math.min(hc, 3)];
+    Object.assign(Hs, { alt: 1, show: 0, pick: 1, hi: null });
+    sel = [];
+    selN = [];
+    ph = 4;
+    render();
+};
+
+function pickH(n) {
+    if (ph == 1) {
+        Hok = roleH(n) == Hq;
+        hk = Hok ? hk + 1 : 0;
+        Hs.pick = 0;
+        Hs.show = 1;
+        ph = 2;
+        render();
+    }
+    else if (ph == 4) {
+        sel.push(roleH(n) || 'x');
+        selN.push(n);
+        Hs.hi = selN.slice();
+        if (sel.length == 1) {
+            render();
+            return;
+        }
+        Hs.hi = null;
+        Hok = sel[0] == DEF[Hr][0] && sel[1] == DEF[Hr][1];
+        hc += Hok ? 1 : 0;
+        Hs.pick = 0;
+        Hs.show = 1;
+        ph = 5;
+        render();
+    }
+}
+
+function m9() {
+    const tri = Hs.tg == 'B' ? 'ABH' : 'ACH', d = '●'.repeat(Math.min(hk, 3)) + '○'.repeat(Math.max(0, 3 - hk));
+    if (ph == 0) {
+        newH();
+        Object.assign(Hs, { alt: 0, show: 0, pick: 0, hi: null });
+        hk = 0;
+        hc = 0;
+        put(`<p>در مثلث ABC زاویه‌ی <b>B</b> قائمه نیست؛ پس نمی‌توانیم مستقیم از «مقابل و مجاور» استفاده کنیم.</p><p>راه‌حل: از A ارتفاع AH را بر BC رسم می‌کنیم تا یک مثلث قائم‌الزاویه ساخته شود.</p><button class=pri onclick="hs1()">ارتفاع AH را رسم کن</button>`);
+        return;
+    }
+    if (ph == 1)
+        put(`<p>ارتفاع رسم شد. در مثلث قائم‌الزاویه‌ی <b>${tri}</b>، نسبت به زاویه‌ی <b>${Hs.tg}</b> (کمان زرد) ضلع «<b class=${CL[Hq]}>${N[Hq]}</b>» را لمس کن.</p><div dir=ltr style="text-align:center">${d}</div><small>سه جواب درست پشت‌سرهم لازم است.</small>`);
+    if (ph == 2)
+        put(msg(Hok ? 'good' : 'bad', Hok ? 'درست!' : 'اشتباه شد. فقط اضلاع مثلث قائم‌الزاویه‌ی ' + tri + ' مهم‌اند. نارنجی مقابل، آبی مجاور و بنفش وتر است.') + `<div dir=ltr style="text-align:center">${d}</div>` + (hk >= 3 ? `<button class=pri onclick="hs3()">ادامه: رسم ارتفاع ◀</button>` : `<button class=pri onclick="hs1()">مثلث بعدی</button>`));
+    if (ph == 3)
+        put(`<p><b>حالا خودت ارتفاع رسم کن!</b> انگشتت را روی رأس A بگذار و تا ضلع BC بکش، طوری که بر BC عمود باشد.</p><div id=note></div>`);
+    if (ph == 4)
+        put(msg('good', 'ارتفاع AH رسم شد.') + `<p>در مثلث ${tri} مقدار <b dir=ltr>${Hr} ${Hs.tg}</b> را بساز: اول ضلع صورت، بعد ضلع مخرج را لمس کن.</p><div class=fm><span>${Hr} ${Hs.tg} =</span>${lf(selN[0] || '؟', selN[1] || '؟')}</div>`);
+    if (ph == 5) {
+        const q = hSd(), Lt = { opp: 'AH', adj: q.adj, hyp: q.hyp };
+        put(msg(Hok ? 'good' : 'bad', Hok ? 'درست!' : 'اشتباه شد.') + `<p>${mt(Hr + ' ' + Hs.tg + ' = ' + lf(Lt[DEF[Hr][0]], Lt[DEF[Hr][1]]))}</p>` + (hc >= 4 ? `<button class=pri onclick="ph=30;render()">پایان ◀</button>` : `<button class=pri onclick="hs3()">یک مثلث دیگر</button>`));
+    }
+    if (ph == 30) {
+        fin('H');
+        put(msg('good', 'آفرین! حالا می‌دانی در مثلث غیرقائم هم با رسم ارتفاع می‌توان از نسبت‌های مثلثاتی استفاده کرد.') + `<button class=pri onclick="go(14)">تمرین طناب ◀</button><button onclick="back()">بازگشت به آموزش</button>`);
+    }
+}
+
+const dragOK = () => (st == 9 && !Hs.alt && ph == 3) || (st == 14 && !Hs.alt && ph % 10 == 2);
+
+function attachH() {
+    const f = $('fig');
+    if (!f || !f.addEventListener)
+        return;
+    const xy = e => {
+        const r = f.getBoundingClientRect();
+        return [(e.clientX - r.left) / r.width * 300, (e.clientY - r.top) / r.height * 250];
+    };
+    f.addEventListener('pointerdown', e => {
+        if (dragOK()) {
+            const q = xy(e);
+            if (Math.hypot(q[0] - Hs.A[0], q[1] - Hs.A[1]) < 34) {
+                Hs.drag = 1;
+                Hs.cur = q;
+                try {
+                    f.setPointerCapture(e.pointerId);
+                }
+                catch (x) {
+                }
+                e.preventDefault();
+            }
+        }
+    });
+    f.addEventListener('pointermove', e => {
+        if (Hs.drag) {
+            Hs.cur = xy(e);
+            drawH();
+            e.preventDefault();
+        }
+    });
+    f.addEventListener('pointerup', e => {
+        if (Hs.drag) {
+            Hs.drag = 0;
+            const q = xy(e);
+            Hs.cur = null;
+            if (Math.hypot(q[0] - Hs.A[0], q[1] - 205) < 38) {
+                Hs.alt = 1;
+                if (ph == 3)
+                    startR();
+                else {
+                    ph++;
+                    render();
+                }
+            }
+            else {
+                drawH();
+                note('bad', 'ارتفاع باید از A بر ضلع BC عمود باشد؛ دوباره امتحان کن.');
+            }
+        }
+    });
+}
+
+// ════════════════════════════════════════════════════════════
+// 12) بخش T: تمرین طناب (بالن و تیر پرچم)
+// ════════════════════════════════════════════════════════════
+
+function sceneBal(A, B, K, H) {
+    const g = H[1], cx = A[0], cy = A[1] - 42;
+    let h = `<g clip-path="url(#rc)"><rect width="300" height="250" fill="url(#sky)"/>${cloudS(60, 38, 1)}${cloudS(240, 62, .9)}<path d="M0 ${g - 26}C60 ${g - 60} 120 ${g - 16} 190 ${g - 42}S280 ${g - 30} 300 ${g - 40}V${g}H0Z" fill="#a7f3d0"/><rect x="0" y="${g}" width="300" height="${250 - g}" fill="url(#gs)"/><path d="M0 ${g}H300" stroke="#22c55e" stroke-width="3"/>`;
+    for (const q of [B, K])
+        h += `<path d="M${A[0]} ${A[1] + 4}L${q[0]} ${q[1]}" stroke="#92400e" stroke-width="3" stroke-linecap="round"/><path d="M${q[0] - 6} ${g + 5}L${q[0]} ${g - 10}L${q[0] + 6} ${g + 5}Z" fill="#78350f"/>`;
+    h += `<ellipse cx="${cx}" cy="${g + 5}" rx="18" ry="4" fill="#166534" opacity=".25"/><path d="M${cx - 24} ${cy + 22}L${cx - 7} ${A[1] - 7}M${cx + 24} ${cy + 22}L${cx + 7} ${A[1] - 7}" stroke="#78350f" stroke-width="2"/><ellipse cx="${cx}" cy="${cy}" rx="30" ry="36" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/><ellipse cx="${cx}" cy="${cy}" rx="20" ry="36" fill="#fde047"/><ellipse cx="${cx}" cy="${cy}" rx="9" ry="36" fill="#ef4444"/><ellipse cx="${cx - 10}" cy="${cy - 14}" rx="6" ry="10" fill="#fff" opacity=".35"/><rect x="${cx - 8}" y="${A[1] - 7}" width="16" height="11" rx="2" fill="#92400e" stroke="#78350f" stroke-width="1.5"/>`;
+    return h + '</g>';
+}
+
+function sceneF(A, B, K, H) {
+    const g = H[1];
+    let h = `<g clip-path="url(#rc)"><rect width="300" height="250" fill="url(#sky)"/>${cloudS(70, 40, 1)}${cloudS(235, 58, .9)}<path d="M0 ${g - 26}C60 ${g - 60} 120 ${g - 16} 190 ${g - 42}S280 ${g - 30} 300 ${g - 40}V${g}H0Z" fill="#a7f3d0"/><rect x="0" y="${g}" width="300" height="${250 - g}" fill="url(#gs)"/><path d="M0 ${g}H300" stroke="#22c55e" stroke-width="3"/><ellipse cx="${H[0]}" cy="${g + 4}" rx="26" ry="6" fill="#166534" opacity=".3"/>`;
+    for (const q of [B, K])
+        h += `<path d="M${A[0]} ${A[1]}L${q[0]} ${q[1]}" stroke="#92400e" stroke-width="3" stroke-linecap="round"/><path d="M${q[0] - 6} ${g + 5}L${q[0]} ${g - 10}L${q[0] + 6} ${g + 5}Z" fill="#78350f"/>`;
+    h += `<path d="M${H[0]} ${g}L${A[0]} ${A[1] - 12}" stroke="#94a3b8" stroke-width="9" stroke-linecap="round"/><path d="M${H[0] - 2} ${g}L${A[0] - 2} ${A[1] - 12}" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/><polygon points="${A[0]},${A[1] - 12} ${A[0] + 34},${A[1] - 2} ${A[0]},${A[1] + 8}" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5" stroke-linejoin="round"/><circle cx="${A[0]}" cy="${A[1] - 13}" r="4.5" fill="#fde047"/>`;
+    return h + '</g>';
+}
+
+function sceneP(A, B, K, H) {
+    return Hs.sc == 'flag' ? sceneF(A, B, K, H) : sceneBal(A, B, K, H);
+}
+
+const EX = [{ B: 30, C: 45, AB: '10', ah: '5', ac: '5√2', tx: `یک بالن را با دو طناب AB و AC به زمین بسته‌اند (A محل اتصال طناب‌ها به بالن است). طول طناب AB برابر ${mt('۱۰')} متر است و با زمین زاویه‌ی ${mt('۳۰°')} می‌سازد. طناب AC با زمین زاویه‌ی ${mt('۴۵°')} می‌سازد. طول طناب AC چقدر است؟`, o1: [[mt('۵'), 1], [mt('۵' + R3), 0], [mt('۱۰'), 0], [mt('۲٫۵'), 0]], m1: `${mt('AH = ۱۰ × sin ۳۰° = ۱۰ × ' + half + ' = ۵')} متر.`, o2: [[mt('۵' + R2), 1], [mt('۱۰' + R2), 0], [mt('۵'), 0], [mt('۱۰'), 0]], m2: `${mt('sin ۴۵° = ' + lf('۵', 'AC'))} یعنی ${mt(h2 + ' = ' + lf('۵', 'AC'))} پس ${mt('AC = ' + lf('۱۰', R2) + ' = ' + lf('۱۰' + R2, '۲') + ' = ۵' + R2)} متر.` },
+    { B: 30, C: 60, AB: '12', ah: '6', ac: '4√3', tx: `یک بالن را با دو طناب AB و AC به زمین بسته‌اند (A محل اتصال طناب‌ها به بالن است). طول طناب AB برابر ${mt('۱۲')} متر است و با زمین زاویه‌ی ${mt('۳۰°')} می‌سازد. طناب AC با زمین زاویه‌ی ${mt('۶۰°')} می‌سازد. طول طناب AC چقدر است؟`, o1: [[mt('۶'), 1], [mt('۶' + R3), 0], [mt('۱۲'), 0], [mt('۳'), 0]], m1: `${mt('AH = ۱۲ × sin ۳۰° = ۱۲ × ' + half + ' = ۶')} متر.`, o2: [[mt('۴' + R3), 1], [mt('۱۲' + R3), 0], [mt('۶'), 0], [mt('۸' + R3), 0]], m2: `${mt('sin ۶۰° = ' + lf('۶', 'AC'))} یعنی ${mt(s3 + ' = ' + lf('۶', 'AC'))} پس ${mt('AC = ' + lf('۱۲', R3) + ' = ' + lf('۱۲' + R3, '۳') + ' = ۴' + R3)} متر.` }];
+
+EX[0].nm = EX[1].nm = 'تمرین بالن';
+
+EX.push({ typ: 2, sc: 'flag', nm: 'تمرین تیر پرچم', B: 30, C: 45, ah: '6', ab: '12', ac: '6√2', d2: 'تیر پرچم بر زمین عمود است؛ پس همان ارتفاع AH مثلث ABC است و طول آن ۶ متر است.', tx: `یک تیر پرچم به ارتفاع ${mt('۶')} متر بر زمین عمود است و با دو طناب AB و AC به زمین بسته شده است. طناب AB با زمین زاویه‌ی ${mt('۳۰°')} و طناب AC با زمین زاویه‌ی ${mt('۴۵°')} می‌سازد. طول هر دو طناب را بیابید.`, o1: [[mt('۱۲'), 1], [mt('۶'), 0], [mt('۱۲' + R3), 0], [mt('۳'), 0]], m1: `${mt(half + ' = ' + lf('۶', 'AB'))} پس ${mt('AB = ۶ ÷ ' + half + ' = ۱۲')} متر.`, o2: [[mt('۶' + R2), 1], [mt('۱۲' + R2), 0], [mt('۶'), 0], [mt('۱۲'), 0]], m2: `${mt(h2 + ' = ' + lf('۶', 'AC'))} پس ${mt('AC = ' + lf('۱۲', R2) + ' = ' + lf('۱۲' + R2, '۲') + ' = ۶' + R2)} متر. طول طناب‌ها ${mt('۱۲')} و ${mt('۶' + R2)} متر است.` });
+
+function exSet(e, xs) {
+    const x = EX[e], tb = Math.tan(x.B * Math.PI / 180), tc = Math.tan(x.C * Math.PI / 180), hh = Math.min(110, 215 / (1 / tb + 1 / tc)), bh = hh / tb, ch = hh / tc, bx = (300 - bh - ch) / 2;
+    Object.assign(Hs, { B: [bx, 205], K: [bx + bh + ch, 205], A: [bx + bh, 205 - hh], tg: 'B', ex: 1, scn: xs == 0 ? 1 : xs == 1 ? 2 : 0, alt: xs >= 3 ? 1 : 0, show: 0, pick: 0, hi: null, cur: null, angs: { B: fa(x.B) + '°', C: fa(x.C) + '°' }, lab: { AB: x.typ == 2 ? '؟' : x.AB, AC: '؟' }, sc: x.sc });
+    if (x.typ == 2) {
+        if (xs >= 3)
+            Hs.lab.AH = x.ah;
+        if (xs >= 5)
+            Hs.lab.AB = x.ab;
+        if (xs >= 7)
+            Hs.lab.AC = x.ac;
+    }
+    else {
+        if (xs >= 3)
+            Hs.lab.AH = '؟';
+        if (xs >= 5)
+            Hs.lab.AH = x.ah;
+        if (xs >= 7)
+            Hs.lab.AC = x.ac;
+    }
+}
+
+const exmc = a => a.slice().sort(() => Math.random() - .5).map(([h, ok]) => `<button class="opt" onclick="exA(${ok})">${h}</button>`).join('') + '<div id=note></div>';
+
+function exA(ok) {
+    if (ok) {
+        ph++;
+        render();
+    }
+    else
+        note('bad', 'دوباره فکر کن؛ ضلع معلوم و مجهول را نسبت به زاویه‌ی مورد نظر نام‌گذاری کن.');
+}
+
+function m14() {
+    const e = ph / 10 | 0, xs = ph % 10;
+    if (e >= EX.length) {
+        fin('T');
+        put(msg('good', 'آفرین! همه‌ی تمرین‌های طناب (بالن و تیر پرچم) را قدم‌به‌قدم حل کردی: مدل‌سازی، رسم ارتفاع و دو بار استفاده از نسبت مثلثاتی.') + '<button class=pri onclick="back()">بازگشت به آموزش ◀</button>');
+        return;
+    }
+    const x = EX[e];
+    exSet(e, xs);
+    const hd = `<small>${x.nm} · ${fa(e + 1)} از ${fa(EX.length)}</small>`;
+    if (xs == 0)
+        put(hd + `<p>${x.tx}</p><button class=pri onclick="ph++;render()">مدل‌سازی کنیم ◀</button>`);
+    if (xs == 1)
+        put(hd + '<p>مثلث ABC را روی تصویر مدل کردیم: AB و AC طناب‌ها هستند و BC روی زمین است. زاویه‌ها و اندازه‌های معلوم را هم نوشتیم.</p><button class=pri onclick="ph++;render()">حالا حل کنیم ◀</button>');
+    if (xs == 2)
+        put(hd + `<p>${x.d2 || 'ارتفاع بالن از زمین بر زمین عمود است؛ پس AH ارتفاع مثلث ABC است.'} انگشتت را روی A بگذار و تا ضلع BC بکش تا ارتفاع AH را رسم کنی.</p><div id=note></div>`);
+    if (xs == 3)
+        put(hd + msg('good', 'ارتفاع AH رسم شد؛ دو مثلث قائم‌الزاویه‌ی ABH و ACH ساخته شد.') + `<p><b>گام ۱:</b> ${x.typ == 2 ? 'برای پیدا کردن AB در مثلث ABH (ارتفاع AH و زاویه‌ی B را می‌دانیم)' : 'برای پیدا کردن AH در مثلث ABH (طناب AB و زاویه‌ی B را می‌دانیم)'} از کدام نسبت استفاده کنیم؟</p>` + exmc([[mt('sin B'), 1], [mt('cos B'), 0], [mt('tan B'), 0]]));
+    if (xs == 4)
+        put(hd + msg('good', 'درست است: AH مقابل زاویه‌ی B و AB وتر است.') + `<p>${mt('sin B = ' + lf('AH', 'AB'))}</p><p><b>گام ۲:</b> ${x.typ == 2 ? 'طول AB' : 'مقدار AH'} چقدر می‌شود؟</p>` + exmc(x.o1));
+    if (xs == 5)
+        put(hd + msg('good', x.m1) + `<p><b>گام ۳:</b> حالا در مثلث ACH، ضلع AH مقابل زاویه‌ی C و AC وتر است. از کدام نسبت استفاده کنیم؟</p>` + exmc([[mt('sin C'), 1], [mt('cos C'), 0], [mt('tan C'), 0]]));
+    if (xs == 6)
+        put(hd + msg('good', 'درست است.') + `<p>${mt('sin C = ' + lf('AH', 'AC'))}</p><p><b>گام ۴:</b> طول AC چقدر می‌شود؟</p>` + exmc(x.o2));
+    if (xs == 7)
+        put(hd + msg('good', x.m2) + `<button class=pri onclick="ph=${(e + 1) * 10};render()">${e < EX.length - 1 ? 'تمرین بعد ◀' : 'پایان ◀'}</button>`);
+}
+
+// ════════════════════════════════════════════════════════════
+// 13) محاسبه‌ی مساحت: آموزش و تمرین
+// ════════════════════════════════════════════════════════════
+
+let Sg = null;
+
+function drawS() {
+    const g = Sg, f = $('fig');
+    if (!g) {
+        f.innerHTML = '';
+        return;
+    }
+    const r = g.th * Math.PI / 180, Ax = g.b * Math.cos(r), Ay = g.b * Math.sin(r), mn = Math.min(0, Ax), mx = Math.max(g.a, Ax), u = Math.min(230 / (mx - mn), 140 / Ay, 40), cx = 150 - (mn + mx) / 2 * u, by = 125 + Ay * u / 2;
+    const O = [cx, by], P = [cx + g.a * u, by], Q = [cx + Ax * u, by - Ay * u], H = [Q[0], by], cn = [(O[0] + P[0] + Q[0]) / 3, (O[1] + P[1] + Q[1]) / 3], nm = g.nm;
+    const out = (q, d) => {
+        const dx = q[0] - cn[0], dy = q[1] - cn[1], l = Math.hypot(dx, dy) || 1;
+        return [q[0] + dx / l * d, q[1] + dy / l * d];
+    }, md = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], un = (a, b, l) => {
+        const dx = b[0] - a[0], dy = b[1] - a[1], d = Math.hypot(dx, dy);
+        return [dx / d * l, dy / d * l];
+    };
+    const lb = (x, y, t) => String(t).includes('√') ? `<foreignObject x="${x - 36}" y="${y - 14}" width="72" height="28"><div xmlns="http://www.w3.org/1999/xhtml" style="display:flex;justify-content:center;align-items:center;height:28px;font:700 15px sans-serif;color:#0f172a;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;direction:ltr">${fxi(String(t))}</div></foreignObject>` : `<text class=hl x="${x}" y="${y}" font-size="15" font-weight="700" fill="#0f172a" text-anchor="middle" dominant-baseline="middle">${fa(t)}</text>`;
+    let h = DEFS + `<polygon points="${O} ${P} ${Q}" fill="url(#tg)" filter="url(#sh)"/>`;
+    for (const [a, b] of [[O, P], [O, Q], [P, Q]])
+        h += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#64748b" stroke-width="5" stroke-linecap="round"/>`;
+    const hasAlt = g.alt && Math.abs(H[0] - O[0]) > 3;
+    if (g.rt)
+        h += `<path d="M${P[0] - 9} ${P[1]}v-9h9" fill="#e0e7ff" stroke="#334155" stroke-width="1.6"/>`;
+    if (hasAlt) {
+        const sx = (P[0] > H[0] ? 1 : -1) * 9;
+        h += `<line x1="${Q[0]}" y1="${Q[1]}" x2="${H[0]}" y2="${H[1]}" stroke="#dc2626" stroke-width="4" stroke-dasharray="6 5" stroke-linecap="round"/><path d="M${H[0] + sx} ${H[1]}v-9h${-sx}" fill="#e0e7ff" stroke="#334155" stroke-width="1.6"/>`;
+    }
+    const e1 = un(O, P, 26), e2 = un(O, Q, 26), cr = e1[0] * e2[1] - e1[1] * e2[0], bx = e1[0] + e2[0], bz = e1[1] + e2[1], bl = Math.hypot(bx, bz) || 1;
+    h += `<path d="M${O[0]} ${O[1]}L${O[0] + e1[0]} ${O[1] + e1[1]}A26 26 0 0 ${cr > 0 ? 1 : 0} ${O[0] + e2[0]} ${O[1] + e2[1]}Z" fill="#fde68acc" stroke="#d97706" stroke-width="2.5" stroke-linejoin="round"/>`;
+    if (g.ang)
+        h += `<text class=hl x="${O[0] + bx / bl * (g.th > 60 ? 36 : 50)}" y="${O[1] + bz / bl * (g.th > 60 ? 36 : 50)}" font-size="14" font-weight="700" fill="#b45309" text-anchor="middle" dominant-baseline="middle">${g.ang}</text>`;
+    if (g.ex2)
+        for (const k of ['p', 'q']) {
+            const V = k == 'p' ? P : Q, d = un(V, cn, 30);
+            h += `<text class=hl x="${V[0] + d[0]}" y="${V[1] + d[1]}" font-size="13" font-weight="700" fill="#b45309" text-anchor="middle" dominant-baseline="middle">${g.ex2[k]}</text>`;
+        }
+    for (const [k, V] of [['o', O], ['p', P], ['q', Q]]) {
+        const z = out(V, 16);
+        h += `<circle cx="${V[0]}" cy="${V[1]}" r="4.5" fill="#fff" stroke="#334155" stroke-width="2"/><text class=hl x="${z[0]}" y="${z[1]}" font-size="17" font-weight="700" fill="#1e293b" text-anchor="middle" dominant-baseline="middle">${nm[k]}</text>`;
+    }
+    const L = g.lab || {};
+    if (L.op)
+        h += lb((O[0] + P[0]) / 2, by + 18, L.op);
+    if (L.oq) {
+        const z = out(md(O, Q), 20);
+        h += lb(z[0], z[1], L.oq);
+    }
+    if (L.pq) {
+        const z = out(md(P, Q), 20);
+        h += lb(z[0], z[1], L.pq);
+    }
+    if (L.h && hasAlt)
+        h += lb(Q[0] + 16, (Q[1] + by) / 2, L.h);
+    f.innerHTML = h;
+}
+
+const mc = (a, fn) => a.slice().sort(() => Math.random() - .5).map(([h, ok]) => `<button class="opt" onclick="${fn}(${ok})">${h}</button>`).join('') + '<div id=note></div>';
+
+const SGN = { o: 'C', p: 'B', q: 'A' };
+
+const H12 = ['مساحت = ½ × قاعده × ارتفاع؛ دو عدد را در هم ضرب کن و نصف کن.', '', 'AH مقابل زاویه‌ی C و AC وتر است؛ کدام نسبت مقابل ÷ وتر است؟', 'AH را جایگذاری کن: ½ × BC × AH.'];
+
+function a12(ok) {
+    if (ok) {
+        ph++;
+        render();
+    }
+    else
+        note('bad', H12[ph]);
+}
+
+function m12() {
+    if (ph == 0) {
+        Sg = { a: 8, b: 5.8, th: 60, nm: SGN, alt: 1, lab: { op: '8', h: '5' } };
+        put(`<p><b>روش اول: مساحت با ارتفاع.</b></p><p>در این مثلث قاعده ${mt('BC = ۸')} و ارتفاع ${mt('AH = ۵')} است. مساحت مثلث چقدر است؟</p>` + mc([[mt('۴۰'), 0], [mt('۲۰'), 1], [mt('۱۳'), 0]], 'a12'));
+        return;
+    }
+    if (ph == 1) {
+        Sg = { a: 8, b: 6, th: 30, nm: SGN, alt: 0, lab: { op: '8', oq: '6' }, ang: '۳۰°' };
+        put(msg('good', `درست است: ${mt('S = ½ × ۸ × ۵ = ۲۰')}. یعنی ${mt('S = ½ × قاعده × ارتفاع')}`) + `<p><b>روش دوم: با زاویه‌ی بین دو ضلع.</b></p><p>گاهی ارتفاع را نمی‌دانیم و فقط دو ضلع و زاویه‌ی بین آن‌ها را داریم: ${mt('BC = ۸')}، ${mt('AC = ۶')} و ${mt('C = ۳۰°')}. اول ارتفاع AH را رسم می‌کنیم.</p><button class=pri onclick="Sg.alt=1;Sg.lab.h='؟';ph=2;render()">ارتفاع AH را رسم کن</button>`);
+        return;
+    }
+    if (ph == 2) {
+        put(`<p><b>گام ۱:</b> در مثلث قائم‌الزاویه‌ی AHC، ضلع AH مقابل زاویه‌ی C و AC وتر است. کدام رابطه درست است؟</p>` + mc([[mt('AH = AC × sin C'), 1], [mt('AH = AC × cos C'), 0], [mt('AH = AC × tan C'), 0]], 'a12'));
+        return;
+    }
+    if (ph == 3) {
+        Sg.lab.h = '3';
+        put(msg('good', `${mt('AH = ۶ × sin ۳۰° = ۶ × ' + half + ' = ۳')}`) + `<p><b>گام ۲:</b> حالا با ${mt('S = ½ × BC × AH')} مساحت را حساب کن:</p>` + mc([[mt('۱۲'), 1], [mt('۲۴'), 0], [mt('۴۸'), 0]], 'a12'));
+        return;
+    }
+    fin('K1');
+    put(msg('good', `مساحت ${mt('۱۲')} شد. حالا دو فرمول را کنار هم ببین:`) + `<div class=nm><b>با ارتفاع</b><div class=fm>${mt('S = ½ × a × h')}</div></div><div class=nm><b>با زاویه‌ی بین دو ضلع</b><div class=fm>${mt('S = ½ × a × b × sin C')}</div></div><p>چون ${mt('h = b × sin C')} است، با جایگذاری در فرمول اول به فرمول دوم می‌رسیم.</p><p><b>نکته:</b> زاویه‌ی C باید <b>بین</b> دو ضلع a و b باشد.</p><button class=pri onclick="go(13)">تمرین ◀</button><button onclick="back()">بازگشت</button>`);
+}
+
+const qq = (t, o, m) => ({ t, o, m });
+
+const AP = [
+    { sg: { a: 8, b: 5, th: 30, nm: SGN, lab: { op: '8', oq: '5' }, ang: '۳۰°' }, tx: `در مثلث ABC داریم ${mt('BC = ۸')}، ${mt('AC = ۵')} و ${mt('C = ۳۰°')}. مساحت مثلث چقدر است؟`,
+        s1: qq('کدام رابطه‌ی مساحت مناسب است؟ (زاویه‌ی بین دو ضلع داده شده)', [[mt('S = ½ × BC × AC × sin C'), 1], [mt('S = ½ × BC × AC × cos C'), 0], [mt('S = BC × AC × sin C'), 0]], 'زاویه‌ی C بین دو ضلع BC و AC است؛ پس نصف حاصل‌ضرب دو ضلع را در سینوس زاویه‌ی بینشان حساب می‌کنیم.'),
+        s2: qq('مساحت چقدر است؟', [[mt('۱۰'), 1], [mt('۲۰'), 0], [mt('۴۰'), 0]], mt('S = ½ × ۸ × ۵ × ' + half + ' = ۱۰')) },
+    { sg: { a: 6, b: 4, th: 45, nm: SGN, lab: { op: '6', oq: '4' }, ang: '۴۵°' }, tx: `در مثلث ABC داریم ${mt('BC = ۶')}، ${mt('AC = ۴')} و ${mt('C = ۴۵°')}. مساحت مثلث چقدر است؟`,
+        s1: qq('کدام رابطه‌ی مساحت مناسب است؟', [[mt('S = ½ × BC × AC × sin C'), 1], [mt('S = ½ × BC × AC × tan C'), 0], [mt('S = ½ × BC × AC'), 0]], 'باید سینوس زاویه‌ی بین دو ضلع در فرمول بیاید.'),
+        s2: qq('مساحت چقدر است؟', [[mt('۶' + R2), 1], [mt('۱۲' + R2), 0], [mt('۱۲'), 0], [mt('۶' + R3), 0]], mt('S = ½ × ۶ × ۴ × ' + h2 + ' = ۱۲ × ' + h2 + ' = ۶' + R2)) },
+    { sg: { a: 6, b: 6, th: 60, nm: { o: 'A', p: 'B', q: 'C' }, lab: { op: '6', oq: '6' }, ang: '؟', ex2: { p: '۶۰°', q: '۶۰°' } }, tx: `در مثلث ABC داریم ${mt('AB = AC = ۶')} و زاویه‌های ${mt('B = C = ۶۰°')}. مساحت مثلث چقدر است؟`, ang1: '۶۰°',
+        s1: qq('زاویه‌ی بین دو ضلع AB و AC، یعنی زاویه‌ی A، چند درجه است؟', [[mt('۶۰°'), 1], [mt('۳۰°'), 0], [mt('۹۰°'), 0], [mt('۱۲۰°'), 0]], mt('۱۸۰° − ۶۰° − ۶۰° = ۶۰°')),
+        s2: qq('مساحت چقدر است؟', [[mt('۹' + R3), 1], [mt('۱۸' + R3), 0], [mt('۹'), 0], [mt('۱۸'), 0]], mt('S = ½ × ۶ × ۶ × ' + s3 + ' = ۱۸ × ' + s3 + ' = ۹' + R3)) },
+    { sg: { a: 4, b: 8, th: 60, nm: { o: 'A', p: 'B', q: 'C' }, lab: { op: '4', oq: '8' }, ang: '؟', rt: 1 }, tx: `در مثلث ABC زاویه‌ی ${mt('B = ۹۰°')} است و ${mt('AB = ۴')} و وتر ${mt('AC = ۸')} است. مساحت مثلث چقدر است؟`, ang1: '۶۰°',
+        s1: qq('برای فرمول مساحت به زاویه‌ی A (بین دو ضلع AB و AC) نیاز داریم. زاویه‌ی A چند درجه است؟ (راهنمایی: cos A = AB ÷ AC)', [[mt('۶۰°'), 1], [mt('۳۰°'), 0], [mt('۴۵°'), 0], [mt('۹۰°'), 0]], mt('cos A = ' + lf('۴', '۸') + ' = ' + half) + ' پس ' + mt('A = ۶۰°')),
+        s2: qq('مساحت چقدر است؟', [[mt('۸' + R3), 1], [mt('۱۶' + R3), 0], [mt('۱۶'), 0], [mt('۸'), 0]], mt('S = ½ × ۴ × ۸ × sin ۶۰° = ½ × ۴ × ۸ × ' + s3 + ' = ۸' + R3)) },
+    { sg: { a: 8, b: 6, th: 30, nm: SGN, lab: { op: '8', oq: '6' }, ang: '۳۰°' }, alt: 1, lab1: { h: '؟' }, lab2: { h: '3' }, tx: `در مثلث ABC داریم ${mt('BC = ۸')}، ${mt('AC = ۶')} و ${mt('C = ۳۰°')}. ارتفاع AH (وارد بر BC) را بیابید.`,
+        s1: qq('ابتدا مساحت را با دو ضلع و زاویه‌ی بین‌شان حساب کن:', [[mt('۱۲'), 1], [mt('۲۴'), 0], [mt('۴۸'), 0]], mt('S = ½ × ۸ × ۶ × ' + half + ' = ۱۲')),
+        s2: qq('مساحت را با ارتفاع بنویس: ½ × BC × AH. مقدار AH چقدر است؟', [[mt('۳'), 1], [mt('۶'), 0], [mt('۱٫۵'), 0], [mt('۱۲'), 0]], mt('۱۲ = ½ × ۸ × AH') + ' پس ' + mt('AH = ' + lf('۲ × ۱۲', '۸') + ' = ۳')) },
+    { sg: { a: 10, b: 6, th: 45, nm: SGN, lab: { op: '10', oq: '6' }, ang: '۴۵°' }, alt: 1, lab1: { h: '؟' }, lab2: { h: '3√2' }, tx: `در مثلث ABC داریم ${mt('BC = ۱۰')}، ${mt('AC = ۶')} و ${mt('C = ۴۵°')}. ارتفاع AH (وارد بر BC) را بیابید.`,
+        s1: qq('ابتدا مساحت را حساب کن:', [[mt('۱۵' + R2), 1], [mt('۳۰' + R2), 0], [mt('۳۰'), 0], [mt('۱۵'), 0]], mt('S = ½ × ۱۰ × ۶ × ' + h2 + ' = ۳۰ × ' + h2 + ' = ۱۵' + R2)),
+        s2: qq('مساحت را با ارتفاع بنویس: ½ × BC × AH. مقدار AH چقدر است؟', [[mt('۳' + R2), 1], [mt('۶' + R2), 0], [mt('۱۵' + R2), 0], [mt('۳'), 0]], mt('۱۵' + R2 + ' = ½ × ۱۰ × AH') + ' پس ' + mt('AH = ' + lf('۲ × ۱۵' + R2, '۱۰') + ' = ۳' + R2)) }
+];
+
+function ap(ok) {
+    if (ok) {
+        ph++;
+        render();
+    }
+    else
+        note('bad', 'دوباره فکر کن؛ فرمول مساحت و شکل را ببین.');
+}
+
+function m13() {
+    const pi = ph / 3 | 0, t = ph % 3;
+    if (pi >= AP.length) {
+        Sg = null;
+        fin('K2');
+        put(msg('good', 'آفرین! هر سه نوع مسئله‌ی مساحت را حل کردی: فقط مساحت، پیدا کردن زاویه‌ی بین، و پیدا کردن ارتفاع.') + '<button class=pri onclick="back()">بازگشت ◀</button>');
+        return;
+    }
+    const q = AP[pi];
+    Sg = Object.assign({}, q.sg, { alt: q.alt && t >= 1 ? 1 : 0, lab: Object.assign({}, q.sg.lab, t >= 1 ? q.lab1 : {}, t >= 2 ? q.lab2 : {}), ang: (t >= 1 && q.ang1) ? q.ang1 : q.sg.ang });
+    const hd = `<small>مسئله‌ی ${fa(pi + 1)} از ${fa(AP.length)}</small>`;
+    if (t == 0)
+        put(hd + `<p>${q.tx}</p><p><b>گام ۱:</b> ${q.s1.t}</p>` + mc(q.s1.o, 'ap'));
+    if (t == 1)
+        put(hd + msg('good', q.s1.m) + `<p><b>گام ۲:</b> ${q.s2.t}</p>` + mc(q.s2.o, 'ap'));
+    if (t == 2)
+        put(hd + msg('good', q.s2.m) + `<button class=pri onclick="ph++;render()">${pi < AP.length - 1 ? 'مسئله‌ی بعد ◀' : 'پایان ◀'}</button>`);
+}
+
+function areaV() {
+    $('figc').style.display = 'none';
+    $('prog').innerHTML = '<button onclick="home()">بازگشت به منو</button>';
+    put(progCard(['K1', 'K2'], 'قسمت') + tileH('K', 'آموزش و فرمول', 'مساحت با ارتفاع و با سینوس زاویه‌ی بین دو ضلع', 'go(12)', 6, DN.K1) + tileH('D', 'تمرین', 'سه نوع مسئله: فقط مساحت، پیدا کردن زاویه‌ی بین، و پیدا کردن ارتفاع', 'go(13)', 7, DN.K2));
+}
+
+// ════════════════════════════════════════════════════════════
+// 14) آزمون: بدون زمان و زمان‌دار
+// ════════════════════════════════════════════════════════════
+
+const QN = ['آسان', 'متوسط', 'سخت', 'بسیار سخت', 'مساحت'];
+
+const QZ = [[
+        ['مقدار {sin(30°)} برابر است با:', ['1/2', '√3/2', '√2/2', '1'], 0, 'ضلع مقابل ۳۰° نصف وتر است؛ پس {sin(30°)=1/2}.'],
+        ['مقدار {cos(60°)} برابر است با:', ['1/2', '√3/2', '1', '0'], 0, 'ضلع مجاور ۶۰° نصف وتر است؛ پس {cos(60°)=1/2}.'],
+        ['مقدار {tan(45°)} برابر است با:', ['0', '1', '√3', '1/2'], 1, 'در مثلث ۴۵-۴۵-۹۰ دو ضلع قائم برابرند؛ پس {tan(45°)=1}.'],
+        ['مقدار {sin(90°)} برابر است با:', ['0', '1/2', '1', '√2/2'], 2, 'وقتی زاویه ۹۰° است، ضلع مقابل با وتر برابر می‌شود؛ پس {sin(90°)=1}.'],
+        ['مقدار {cos(0°)} برابر است با:', ['0', '1', '1/2', '√3/2'], 1, 'وقتی زاویه به ۰° برسد، ضلع مجاور با وتر برابر می‌شود؛ پس {cos(0°)=1}.']
+    ],
+    [['در مثلث قائم‌الزاویه با زاویه‌ی ۳۰°، مقدار {cos(30°)} کدام است؟', ['1/2', '√3/2', '√2/2', '√3'], 1, 'مجاور ÷ وتر در مثلث ۳۰-۶۰-۹۰ برابر {√3/2} است.'],
+        ['در مثلث قائم‌الزاویه با زاویه‌ی ۴۵°، مقدار {tan(45°)} کدام است؟', ['0', '√2', '1', '√3'], 2, 'دو ضلع قائم برابرند؛ پس {tan(45°)=1}.'],
+        ['در مثلث قائم‌الزاویه‌ای ضلع مقابل زاویه‌ی ۳۰° برابر ۵ است. وتر کدام است؟', ['5', '10', '5√2', '5√3'], 1, '{sin(30°)=1/2}؛ پس مقابل ÷ وتر = {1/2} و وتر دو برابر ۵، یعنی ۱۰ است.'],
+        ['اگر {sin θ=3/5} باشد، {cos θ} کدام است؟', ['4/5', '5/4', '3/4', '4/3'], 0, 'مقابل ۳ و وتر ۵ است؛ با فیثاغورس مجاور ۴ می‌شود؛ پس {cos θ=4/5}.']],
+    [['مقدار {sin(30°)+cos(60°)} برابر است با:', ['0', '1/2', '1', '3/2'], 2, '{sin(30°)+cos(60°)=1/2+1/2=1}'],
+        ['مقدار {sin(45°)×cos(45°)} برابر است با:', ['0', '1/4', '1/2', '√2/2'], 2, '{sin(45°)×cos(45°)=√2/2×√2/2=2/4=1/2}'],
+        ['مقدار {tan(30°)+tan(60°)} برابر است با:', ['√3', '2√3/3', '4√3/3', '√3+1'], 2, '{tan(30°)+tan(60°)=√3/3+√3=4√3/3}'],
+        ['مقدار {sin²(30°)+cos²(30°)} برابر است با:', ['0', '1/2', '1', '2'], 2, 'طبق رابطه‌ی {sin²θ+cos²θ=1}: {(1/2)²+(√3/2)²=1/4+3/4=1}'],
+        ['اگر {sin A=12/13} و A حاده باشد، {cos A} کدام است؟', ['5/13', '12/5', '13/5', '5/12'], 0, '{sin²A+cos²A=1} پس {cos²A=1−144/169=25/169} و {cos A=5/13}.']],
+    [['نردبانی به طول ۱۰ متر با زمین زاویه‌ی ۶۰° می‌سازد. ارتفاع دیواری که نردبان به آن تکیه دارد چند متر است؟', ['5', '5√3', '10', '10√3'], 1, 'ارتفاع مقابل ۶۰° است: {10×sin(60°)=10×√3/2=5√3}.'],
+        ['سایه‌ی درختی ۱۲ متر است و زاویه‌ی ارتفاع خورشید ۳۰° است. ارتفاع درخت چند متر است؟', ['4√3', '6', '12', '12√3'], 0, '{tan(30°)=√3/3} پس ارتفاع {12×√3/3=4√3} است.'],
+        ['قایقی در فاصله‌ی ۲۰۰ متری (روی خط دید) با خط ساحل زاویه‌ی ۳۰° می‌سازد. فاصله‌ی عمودی قایق از ساحل چند متر است؟', ['100', '100√3', '200', '200√3'], 0, 'فاصله‌ی عمودی مقابل ۳۰° است: {200×sin(30°)=200×1/2=100}.'],
+        ['فردی بالای برجی را با زاویه‌ی ۴۵° می‌بیند و فاصله‌اش تا پای برج ۳۰ متر است. ارتفاع برج چند متر است؟ (چشم در سطح زمین)', ['15', '30', '30√2', '45'], 1, '{tan(45°)=1} پس ارتفاع با فاصله برابر و ۳۰ متر است.'],
+        ['مقدار {sin(30°)×cos(60°)+tan(45°)} برابر است با:', ['1/4', '3/4', '5/4', '7/4'], 2, '{1/2×1/2+1=1/4+1=5/4}'],
+        ['در مثلث قائم‌الزاویه‌ای وتر ۱۳ و یک ضلع ۵ است. سینوس زاویه‌ی مقابل ضلع ۵ کدام است؟', ['5/12', '5/13', '12/13', '13/5'], 1, 'سینوس = مقابل ÷ وتر = {5/13}.']]];
+
+QZ.push([
+    ['مثلثی دو ضلع ۶ و ۸ دارد و زاویه‌ی بین آن دو ضلع {30°} است. مساحت مثلث کدام است؟', ['12', '24', '48', '6√3'], 0, '{S = 1/2 × 6 × 8 × sin(30°) = 1/2 × 6 × 8 × 1/2 = 12}'],
+    ['دو ضلع یک مثلث ۴ و ۶ و زاویه‌ی بین آن‌ها {45°} است. مساحت مثلث کدام است؟', ['6√2', '12√2', '12', '6'], 0, '{S = 1/2 × 4 × 6 × √2/2 = 6√2}'],
+    ['دو ضلع یک مثلث ۱۰ و ۴ و زاویه‌ی بین آن‌ها {60°} است. مساحت مثلث کدام است؟', ['10√3', '20√3', '20', '10'], 0, '{S = 1/2 × 10 × 4 × √3/2 = 10√3}'],
+    ['مساحت مثلث متساوی‌الاضلاعی به ضلع ۴ کدام است؟ (زاویه‌های آن {60°} است)', ['4√3', '8√3', '16', '8'], 0, '{S = 1/2 × 4 × 4 × √3/2 = 4√3}'],
+    ['در مثلث قائم‌الزاویه‌ای یک ضلع قائم ۳ و وتر ۶ است. مساحت مثلث کدام است؟ (راهنمایی: زاویه‌ی بین ضلع قائم و وتر را با کسینوس بیاب)', ['9√3/2', '9√3', '9', '18'], 0, '{cos θ = 3/6 = 1/2} پس {θ = 60°} و {S = 1/2 × 3 × 6 × sin(60°) = 1/2 × 3 × 6 × √3/2 = 9√3/2}'],
+    ['مساحت یک مثلث ۱۲ و یکی از ضلع‌های آن ۸ است. ارتفاع وارد بر این ضلع کدام است؟', ['3', '6', '1.5', '12'], 0, '{S = 1/2 × 8 × h = 12} پس {h = 24/8 = 3}']
+]);
+
+const QT = [25, 35, 45, 60, 45];
+
+let qm = 0, qs = 0, qp = 0, qi = 0, qw = [], qo = [0, 1, 2, 3], qL = [], qt = 0, qrem = 0, qlast = 0;
+
+const sv = (k, v) => {
+    DN[k] = Math.max(DN[k] || 0, v);
+    try {
+        localStorage.setItem('trigDN', JSON.stringify(DN));
+    }
+    catch (e) {
+    }
+};
+
+const shuf = () => [0, 1, 2, 3].sort(() => Math.random() - .5);
+
+const curQ = () => QZ[qL[qi][0]][qL[qi][1]];
+
+function qStart(m) {
+    qm = m;
+    qi = 0;
+    qs = 0;
+    qp = 0;
+    qw = [];
+    qL = [];
+    QZ.forEach((lv, l) => {
+        lv.map((q, i) => [l, i]).sort(() => Math.random() - .5).slice(0, 2).forEach(x => qL.push(x));
+    });
+    qo = shuf();
+    ph = 1;
+    render();
+}
+
+function qAns(i) {
+    if (qt) {
+        clearInterval(qt);
+        qt = 0;
+    }
+    const q = curQ();
+    Hok = i == q[2];
+    qlast = 0;
+    if (Hok) {
+        qs++;
+        qlast = 10 + (qm ? Math.round(Math.max(0, qrem) / QT[qL[qi][0]] * 5) : 0);
+        qp += qlast;
+    }
+    else
+        qw.push(qL[qi]);
+    ph = 2;
+    render();
+}
+
+function qNext() {
+    qi++;
+    if (qi >= qL.length) {
+        ph = 3;
+        const pc = qs * 10;
+        sv(qm ? 'qt' : 'qu', qp);
+        if (pc >= 70)
+            fin('I');
+    }
+    else {
+        qo = shuf();
+        ph = 1;
+    }
+    render();
+}
+
+const qbar = () => `<div class="qbar">${qL.map((x, k) => `<i class="${k < qi || (k == qi && ph == 2) ? (k < qi ? (qw.some(w => w[0] == x[0] && w[1] == x[1]) ? 'no' : 'ok') : (Hok ? 'ok' : 'no')) : k == qi ? 'cur' : ''}"></i>`).join('')}</div>`;
+
+function m10() {
+    if (ph == 0) {
+        const b1 = DN.qu ? ` · بهترین امتیاز: ${fa(DN.qu)} از ${fa(100)}` : '', b2 = DN.qt ? ` · بهترین امتیاز: ${fa(DN.qt)} از ${fa(150)}` : '';
+        put('<p><b>آزمون</b><br><small>هر آزمون ۱۰ سوال دارد (۲ سوال از هر سطح) و بعد از هر سوال راه‌حل را می‌بینی.</small></p>' + [['بدون زمان', '۱۰ سوال · هر پاسخ درست ۱۰ امتیاز' + b1, 0, '#10b981,#0ea5e9'], ['زمان‌دار', '۱۰ سوال · محدودیت زمان برای هر سوال · امتیاز سرعت تا ۱۵ برای هر سوال' + b2, 1, '#f59e0b,#ef4444']].map(([t, d, m, g]) => `<button class="tile ${(m ? DN.qt : DN.qu) ? 'dn' : ''}" onclick="qStart(${m})"><div class="ic" style="background:linear-gradient(135deg,${g})"><svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${m ? '<circle cx="16" cy="17" r="10"/><path d="M16 11v6l4 3M13 4h6"/>' : ICN.I}</svg></div><span><b>${t}</b><small>${d}</small></span></button>`).join(''));
+        return;
+    }
+    const q = ph < 3 ? curQ() : null, lim = ph < 3 ? QT[qL[qi][0]] : 0;
+    if (ph == 1) {
+        put(`<div class="pts"><span>سوال ${fa(qi + 1)} از ${fa(qL.length)}</span><span>امتیاز: ${fa(qp)}</span></div>${qbar()}` + (qm ? `<div class="tmr" id="tmr"><i id="tbar"></i></div><small>زمان باقی‌مانده: <b id="tnum">${fa(lim)}</b> ثانیه</small>` : '') + `<small>${qm ? '' : 'سطح ' + QN[qL[qi][0]]}</small><p>${tx(q[0])}</p>` + qo.map(i => `<button class="opt" onclick="qAns(${i})">${fx(q[1][i])}</button>`).join(''));
+        if (qm) {
+            qrem = lim;
+            qt = setInterval(() => {
+                qrem -= .1;
+                const b = $('tbar'), n = $('tnum'), t = $('tmr');
+                if (b && b.style)
+                    b.style.width = Math.max(0, qrem / lim * 100) + '%';
+                if (n)
+                    n.textContent = fa(Math.max(0, Math.ceil(qrem)));
+                if (t && t.classList && qrem < 8)
+                    t.classList.add('lo');
+                if (qrem <= 0) {
+                    clearInterval(qt);
+                    qt = 0;
+                    qAns(-1);
+                }
+            }, 100);
+        }
+        return;
+    }
+    if (ph == 2) {
+        put(`<div class="pts"><span>سوال ${fa(qi + 1)} از ${fa(qL.length)}</span><span>امتیاز: ${fa(qp)}</span></div>${qbar()}` + msg(Hok ? 'good' : 'bad', Hok ? 'درست! +' + fa(qlast) + ' امتیاز' : 'اشتباه. جواب درست: ' + fx(q[1][q[2]])) + `<p>${tx(q[3])}</p><button class=pri onclick="qNext()">${qi < qL.length - 1 ? 'سوال بعدی ◀' : 'دیدن نتیجه ◀'}</button>`);
+        return;
+    }
+    const pc = qs * 10, mx = qm ? 150 : 100, st3 = pc >= 90 ? '★★★' : pc >= 70 ? '★★☆' : pc >= 50 ? '★☆☆' : '☆☆☆', tm = pc >= 90 ? 'فوق‌العاده! مثلثات رو قورت دادی.' : pc >= 70 ? 'عالیه! کمی تا استادی فاصله داری.' : pc >= 50 ? 'خوب بود؛ با مرور اشتباه‌ها بهتر هم می‌شی.' : 'اشکال نداره! بخش آموزش را مرور کن و دوباره امتحان کن.';
+    put(`<div class="star">${st3}</div>` + msg(pc >= 70 ? 'good' : 'info', `${tm}<br>درست: ${fa(qs)} از ${fa(qL.length)} (${fa(pc)}٪) · امتیاز: ${fa(qp)} از ${fa(mx)}`) + (qw.length ? '<p><b>مرور اشتباه‌ها:</b></p>' + qw.map(w => {
+        const z = QZ[w[0]][w[1]];
+        return `<div class=nm style="text-align:right"><p>${tx(z[0])}</p><p>جواب درست: ${fx(z[1][z[2]])}</p><p>${tx(z[3])}</p></div>`;
+    }).join('') : '<p>همه‌ی پاسخ‌ها درست بود!</p>') + `<button class=pri onclick="qStart(${qm})">آزمون جدید</button><button onclick="ph=0;render()">انتخاب حالت</button><button onclick="back()">منو</button>`);
+}
+
+// ════════════════════════════════════════════════════════════
+// 15) فلش‌کارت مرور
+// ════════════════════════════════════════════════════════════
+
+const FV = { 0: { sin: '0', cos: '1', tan: '0', cot: 'تعریف نشده' }, 30: { sin: '1/2', cos: '√3/2', tan: '√3/3', cot: '√3' }, 45: { sin: '√2/2', cos: '√2/2', tan: '1', cot: '1' }, 60: { sin: '√3/2', cos: '1/2', tan: '√3', cot: '√3/3' }, 90: { sin: '1', cos: '0', tan: 'تعریف نشده', cot: '0' }, 180: { sin: '0', cos: '-1', tan: '0', cot: 'تعریف نشده' }, 270: { sin: '-1', cos: '0', tan: 'تعریف نشده', cot: '0' } };
+
+let dk = [], fn = 0;
+
+function fcGo() {
+    dk = [];
+    for (const a in FV)
+        for (const f in FV[a])
+            dk.push([f + '(' + a + '°)', FV[a][f]]);
+    dk.sort(() => Math.random() - .5);
+    fn = dk.length;
+    ph = 1;
+    render();
+}
+
+function fcK(k) {
+    const c = dk.shift();
+    if (!k)
+        dk.push(c);
+    if (!dk.length)
+        ph = 2;
+    render();
+}
+
+function fcF(el) {
+    el.classList.toggle('fl');
+    const b = $('fcb');
+    if (b)
+        b.style.visibility = el.classList.contains('fl') ? 'visible' : 'hidden';
+}
+
+const FA = a => /^[-\d√\/]+$/.test(a) ? fx(a) : a;
+
+function m11() {
+    if (ph == 0) {
+        put(`<p><b>مرور ${fa(28)} مقدار مهم.</b> کارت را بخوان، جواب را در ذهنت بساز، بعد کارت را لمس کن تا برگردد.</p><p>اگر بلد بودی کارت کنار می‌رود؛ اگر نه، آخر صف برمی‌گردد.</p><button class=pri onclick="fcGo()">شروع</button>`);
+        return;
+    }
+    if (ph == 1) {
+        const c = dk[0];
+        put(`<small>${fa(dk.length)} کارت مانده از ${fa(fn)}</small><div class="fc3d" onclick="fcF(this)"><div class="fc3i"><div class="fc3f">${mt(c[0])}</div><div class="fc3b">${FA(c[1])}</div></div></div><small>کارت را لمس کن تا برگردد.</small><div id="fcb" style="visibility:hidden"><button class=pri onclick="fcK(1)">بلد بودم ✓</button><button onclick="fcK(0)">هنوز نه</button></div>`);
+        return;
+    }
+    fin('J');
+    put(msg('good', 'آفرین! همه‌ی کارت‌ها را بلد شدی.') + `<button class=pri onclick="back()">بازگشت به منو ◀</button><button onclick="fcGo()">مرور دوباره</button>`);
+}
+
+// ════════════════════════════════════════════════════════════
+// 16) منوها، نمودار پیشرفت و پیام‌های تکمیل
+// ════════════════════════════════════════════════════════════
+
+const SEC = [['A', 'شناخت اضلاع', 'مقابل، مجاور و وتر نسبت به یک زاویه', 0], ['B', 'ثابت بودن نسبت‌ها', `کشف با مثلث‌های بزرگ و کوچک، بعد اثبات با تشابه؛ ${mt('sin, cos, tan, cot')}`, 3], ['D', 'تمرین نام‌گذاری', 'نسبت‌ها را روی شکل بساز (۵ مرحله)', 5], ['E', 'زوایای ویژه', `${mt('۳۰°')} و ${mt('۴۵°')} و ${mt('۶۰°')} را خودت بساز`, 6], ['F', 'روابط مثلثاتی', mt('tan = sin ÷ cos') + ' و ' + mt('sin² + cos² = ۱'), 7], ['G', 'حل مسئله', 'نردبان، سایه و رمپ با نسبت‌های مثلثاتی', 8], ['H', 'ارتفاع در مثلث غیرقائم', 'از رأس ارتفاع بکش تا مثلث قائم‌الزاویه بسازی', 9], ['T', 'تمرین طناب', 'بالن و تیر پرچم با دو طناب؛ مدل‌سازی و حل مرحله‌به‌مرحله', 14], ['I', 'آزمون', '۵ سطح؛ توضیح راه‌حل بعد از هر سوال', 10], ['J', 'فلش‌کارت مرور', 'مقدارهای مهم زاویه‌ها از ۰° تا ۲۷۰° را مرور کن', 11]];
+
+function burst() {
+    const c = ['#f97316', '#0ea5e9', '#7c3aed', '#10b981', '#f43f5e', '#f59e0b'];
+    for (let i = 0; i < 40; i++) {
+        const d = document.createElement('div');
+        d.className = 'cf';
+        d.style.cssText = `left:${Math.random() * 100}vw;background:${c[i % 6]};animation-delay:${Math.random() * .5}s;animation-duration:${1.1 + Math.random() * .9}s`;
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 2800);
+    }
+}
+
+const ICN = { A: '<path d="M6 26V8l20 18Z"/><path d="M6 20h6v6"/>', B: '<path d="M5 27h22L5 9Z"/><path d="M5 27h11L5 17Z"/>', C: '<path d="M3 26h10L3 14Z"/><path d="M17 26h12L17 10Z"/>', D: '<circle cx="16" cy="16" r="11"/><circle cx="16" cy="16" r="6"/><circle cx="16" cy="16" r="1.2"/>', E: '<path d="M5 26h22L5 10Z"/><path d="M19 26a8 8 0 0 0-1.2-4"/>', F: '<path d="M7 12h18M7 20h18"/>', G: '<path d="M10 4 7 28M22 4l3 24M9 10h13M8.5 16h15M8 22h16"/>', H: '<path d="M4 27h24L16 6Z"/><path d="M16 6v21" stroke-dasharray="3 3"/>', I: '<path d="M9 5h14v8a7 7 0 0 1-14 0Z"/><path d="M16 20v5M11 27h10M9 8H5v3a4 4 0 0 0 4 4M23 8h4v3a4 4 0 0 1-4 4"/>', J: '<rect x="5" y="10" width="17" height="14" rx="3"/><path d="M10 6h17v14"/>', K: '<path d="M5 26h22L12 6Z"/><path d="M12 6v20M9 21l3-3" stroke-dasharray="2 3"/>', T: '<ellipse cx="16" cy="12" rx="8" ry="9"/><path d="M11 20l3 5h4l3-5M13 27h6"/>' };
+
+const GR = ['#f97316,#f43f5e', '#0ea5e9,#6366f1', '#7c3aed,#ec4899', '#10b981,#0ea5e9', '#f59e0b,#ef4444', '#6366f1,#8b5cf6', '#14b8a6,#22c55e', '#ef4444,#f97316', '#f59e0b,#eab308', '#0ea5e9,#14b8a6'];
+
+const LK = ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'T'];
+
+const tileH = (k, t, d, g, i, done) => `<button class="tile ${done ? 'dn' : ''}" onclick="${g}"><div class="ic" style="background:linear-gradient(135deg,${GR[i % GR.length]})"><svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${ICN[k]}</svg></div><span><b>${t}</b><small>${d}</small></span>${done ? '<em class="ck">✓</em>' : ''}</button>`;
+
+const ALLK = ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'T', 'K1', 'K2', 'I', 'J'];
+
+const ring = (n, t, sz, id) => {
+    const r = 34, c = 2 * Math.PI * r, p = t ? n / t : 0;
+    return `<svg viewBox="0 0 84 84" width="${sz || 84}" height="${sz || 84}"><defs><linearGradient id="${id || 'rg'}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#10b981"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient></defs><circle cx="42" cy="42" r="${r}" fill="none" stroke="#e0e7ff" stroke-width="9"/><circle cx="42" cy="42" r="${r}" fill="none" stroke="url(#${id || 'rg'})" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - p)}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-size="19" font-weight="800" fill="#4338ca">${fa(Math.round(p * 100))}٪</text></svg>`;
+};
+
+const rankOf = p => p >= 1 ? 'قهرمان مثلثات' : p >= .8 ? 'استاد مثلثات' : p >= .5 ? 'ریاضی‌دان' : p >= .2 ? 'کاشف' : 'تازه‌کار';
+
+function progCard(keys, unit) {
+    const n = keys.filter(k => DN[k]).length, t = keys.length, nx = keys.find(k => !DN[k]);
+    return `<div class="pc"><div>${ring(n, t, 84)}</div><div><b>${rankOf(n / t)}</b><br><small>${fa(n)} از ${fa(t)} ${unit} تمام شده</small><div class="dots">${keys.map(k => `<i class="${DN[k] ? 'on' : k == nx ? 'nx' : ''}"></i>`).join('')}</div></div></div>`;
+}
+
+const WM = { A: ['چشم تیزی داری!', 'مقابل، مجاور و وتر دیگه از دستت در نمی‌ره.'], B: ['کاشف ثابت بودن!', 'خودت پیدا کردی که نسبت‌ها فقط به زاویه بستگی دارن، نه به اندازه‌ی مثلث.'], D: ['استاد نام‌گذاری!', 'نسبت‌ها را روی شکل مثل آب خوردن می‌سازی.'], E: ['مثلث‌ها رازشان را گفتند!', 'نسبت‌های ۳۰°، ۴۵° و ۶۰° را خودت ساختی، نه حفظ کردی.'], F: ['اثبات‌کننده‌ی ماهر!', 'دو رابطه‌ی مهم مثلثاتی را خودت اثبات کردی.'], G: ['حل‌کننده‌ی مسئله!', 'نردبان و سایه و رمپ جلوی تو تسلیم شدند.'], H: ['ارتفاع‌کش حرفه‌ای!', 'حالا می‌دانی مثلث غیرقائم را هم با یک ارتفاع به مثلث قائم تبدیل می‌کنند.'], T: ['مهندس بالن و طناب!', 'مدل‌سازی کردی، ارتفاع کشیدی و طول طناب‌ها را درآوردی.'], K1: ['فرمول مساحت دستته!', 'هم با ارتفاع، هم با سینوس زاویه‌ی بین دو ضلع.'], K2: ['پادشاه مساحت!', 'هر سه نوع مسئله‌ی مساحت را حل کردی.'], I: ['آزمون را زدی!', 'نمره‌ات از ۷۰٪ بالاتر بود؛ آفرین.'], J: ['حافظه‌ی طلایی!', 'همه‌ی کارت‌های مقدارها را بلد شدی.'] };
+
+function showWin(k) {
+    const m = WM[k] || ['آفرین!', 'یک بخش را تمام کردی.'], n = ALLK.filter(x => DN[x]).length, all = n == ALLK.length, d = document.createElement('div');
+    d.className = 'win';
+    d.innerHTML = `<div class="wc">${ring(n, ALLK.length, 96, 'rg2')}<h3>${all ? 'قهرمان مثلثات شدی!' : m[0]}</h3><p>${all ? 'هر ۱۲ بخش را تمام کردی. دمت گرم!' : m[1]}</p><small>${fa(n)} از ${fa(ALLK.length)} بخش تمام شد</small><br><button class="pri" onclick="this.closest('.win').remove()">ادامه ◀</button></div>`;
+    document.body.appendChild(d);
+}
+
+function menuV() {
+    $('figc').style.display = 'none';
+    $('prog').innerHTML = '';
+    const L = SEC.filter(x => LK.includes(x[0])), n = L.filter(x => DN[x[0]]).length;
+    put(progCard(ALLK, 'بخش') + tileH('A', 'آموزش تعاملی', `${fa(n)} از ${fa(L.length)} بخش تمام شده`, 'home(-2)', 0, n == L.length) + tileH('K', 'محاسبه‌ی مساحت', 'دو روش: با ارتفاع و با زاویه‌ی بین دو ضلع؛ آموزش و تمرین', 'home(-3)', 6, DN.K1 && DN.K2) + tileH('I', 'آزمون', 'بدون زمان و زمان‌دار؛ ۱۰ سوال و امتیاز', 'go(10)', 4, DN.I) + tileH('J', 'فلش‌کارت مرور', 'مقدارهای مهم زاویه‌ها از ۰° تا ۲۷۰°', 'go(11)', 5, DN.J) + '<button class="reset" onclick="resetAll()">پاک کردن پیشرفت</button>');
+}
+
+const GROUPS = [
+    ['بشناس', 'اضلاع و نسبت‌ها را بشناس', ['A', 'B']],
+    ['بساز', 'نسبت‌ها را خودت بساز و ثابت کن', ['D', 'E', 'F']],
+    ['به‌کار ببر', 'مسئله‌های واقعی را حل کن', ['G', 'H', 'T']]
+];
+const SHORT = {
+    A: 'مقابل، مجاور و وتر',
+    B: 'کشف و اثبات ثابت بودن نسبت‌ها',
+    D: 'ساختن نسبت‌ها روی شکل',
+    E: 'مقدار نسبت‌ها در ۳۰°، ۴۵° و ۶۰°',
+    F: 'دو رابطه‌ی اصلی بین sin، cos و tan',
+    G: 'نردبان، سایه، رمپ و درخت',
+    H: 'مثلث غیرقائم را به مثلث قائم تبدیل کن',
+    T: 'بالن و تیر پرچم با دو طناب'
+};
+let openG = [];
+function toggleG(gi, btn) {
+    openG[gi] = !openG[gi];
+    btn.classList.toggle('on', openG[gi]);
+    btn.nextElementSibling.classList.toggle('open', openG[gi]);
+}
+function lessonV() {
+    $('figc').style.display = 'none';
+    $('prog').innerHTML = '<button onclick="home()">بازگشت به منو</button>';
+    const byKey = Object.fromEntries(SEC.filter(x => LK.includes(x[0])).map(x => [x[0], x]));
+    const nextK = LK.find(k => !DN[k]);
+    openG = GROUPS.map(g => g[2].includes(nextK));
+    let num = 0;
+    const cont = nextK
+        ? `<button class="cont" onclick="go(${byKey[nextK][3]})"><span><small>ادامه بده از</small><b>${byKey[nextK][1]}</b></span><i>◀</i></button>`
+        : msg('good', 'همه‌ی بخش‌های آموزش را تمام کردی!');
+    const groups = GROUPS.map(([title, desc, keys], gi) => {
+        const steps = keys.map(k => {
+            num++;
+            const x = byKey[k], done = DN[k], isNext = k == nextK;
+            return `<button class="step ${done ? 'dn' : ''} ${isNext ? 'nx' : ''}" onclick="go(${x[3]})"><em>${done ? '✓' : fa(num)}</em><span><b>${x[1]}</b><small>${SHORT[k]}</small></span></button>`;
+        }).join('');
+        const d = keys.filter(k => DN[k]).length;
+        return `<div class="grp g${gi}"><button class="gh ${openG[gi] ? 'on' : ''}" onclick="toggleG(${gi},this)"><span><b>${title}</b><small>${desc}</small></span><em>${fa(d)} از ${fa(keys.length)}${d == keys.length ? ' ✓' : ''}</em><i>▾</i></button><div class="gb ${openG[gi] ? 'open' : ''}"><div><div class="in">${steps}</div></div></div></div>`;
+    }).join('');
+    put(progCard(LK, 'بخش آموزش') + cont + groups);
+}
+function toggleFS() {
+    const d = document, e = d.documentElement;
+    try {
+        if (d.fullscreenElement || d.webkitFullscreenElement) (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+        else (e.requestFullscreen || e.webkitRequestFullscreen).call(e);
+    } catch (x) {}
+}
+
+function resetAll() {
+    if (confirm('همه‌ی پیشرفت و امتیازها پاک شود؟')) {
+        DN = {};
+        try {
+            localStorage.removeItem('trigDN');
+        } catch (e) {}
+        home();
+    }
+}
+
+// ════════════════════════════════════════════════════════════
+// 17) شروع برنامه
+// ════════════════════════════════════════════════════════════
+
+attachH();
+if (!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) {
+    const fb = document.querySelector('.fs');
+    if (fb) fb.style.display = 'none';
+}
+
+home();
+</script>
+</body>
+</html>
